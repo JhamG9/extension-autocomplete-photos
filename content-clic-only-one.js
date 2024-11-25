@@ -1,19 +1,16 @@
 
-
-
 setTimeout(() => {
     try {
-      // Seleccionamos todos los elementos con la clase especificada
-      const clickableElements = document.querySelectorAll('.o_Card_Card_selectableCard.o_EditorCard_EditorCard_selectableCard');
-      console.log(`Elementos encontrados: ${clickableElements.length}`);
-  
-      if (clickableElements.length > 0) {
-        // Iteramos sobre cada elemento para agregar el evento click
-        clickableElements.forEach((clickableElement) => {
-          clickableElement.addEventListener('click', function () {
+        // Intentamos acceder al elemento después de que el DOM esté completamente cargado
+        // SOLO CARGA EL PRIMERO
+        const clickableElement = document.querySelector('.o_Card_Card_selectableCard.o_EditorCard_EditorCard_selectableCard');
+        console.log(clickableElement);
+        if (clickableElement) {
+          // Agregar el evento de clic
+          clickableElement.addEventListener('click', function() {
             try {
               console.log("Elemento clickeado: ", this);
-  
+    
               // Esperamos un poco para asegurarnos de que el siguiente elemento se habilite
               setTimeout(() => {
                 // Intentamos simular un clic en el contenedor <div> que contiene el <textarea>
@@ -22,20 +19,20 @@ setTimeout(() => {
                   console.log("Contenedor <div> encontrado para clic:", divContainer);
                   divContainer.click(); // Simula un clic en el contenedor <div> para enfocarlo
                   console.log("Clic simulado en el <div>");
-  
+    
                   // Ahora buscamos el <textarea> dentro del contenedor
                   const textAreaElement = divContainer.querySelector('.o_input_theme_inputElement.o_Input_Input_inputElement.o_EditorDescription_EditorDescription_descriptionInput');
                   if (textAreaElement) {
                     console.log("Elemento <textarea> encontrado para cambiar valor:", textAreaElement);
-  
+    
                     // Simulamos el enfoque del textarea
                     textAreaElement.focus(); // Fuerza el enfoque en el textarea
                     console.log("Texto en el textarea activado.");
-  
+    
                     // Asignamos el valor al <textarea>
-                    textAreaElement.value = "nuevo valor minimo de cinco palabras que sean estás"; // Establece el nuevo valor en el <textarea>
+                    textAreaElement.value = "Esta imagen tiene cinco palabras como minimo"; // Establece el nuevo valor en el <textarea>
                     console.log("Nuevo valor asignado al <textarea>");
-  
+    
                     // Simulamos el evento input para que el campo sea actualizado correctamente
                     const event = new Event('input', {
                       'bubbles': true,
@@ -43,57 +40,46 @@ setTimeout(() => {
                     });
                     textAreaElement.dispatchEvent(event); // Dispara el evento de entrada
                     console.log("Evento 'input' disparado en el <textarea>");
-                    const keywordsInput = document.querySelector('.o_input_theme_inputElement.o_Input_Input_inputElement[name="pendingKeywords"]');
-        
-                    if (keywordsInput) {
-                        console.log("Input encontrado:", keywordsInput);
+
+
+
+                    const locationInput = document.querySelector('.o_input_theme_inputElement.o_Input_Input_inputElement.o_EditorLocation_EditorLocation_locationInput');
+                    if (locationInput) {
+                        console.log("Input encontrado:", locationInput);
                         
-                        // Asignar el string al valor del input
-                        const keywords = "high, panorama, colombia, aspiration, from above, evening in the city, office, modern, landscape, outdoor, latin america, architecture, downtown, landmark, growth, clouds, bogota, blue, background, cityscape, city, capital, business, building, center, hello";
-                        keywordsInput.value = keywords;
-                        console.log("Valor asignado:", keywordsInput.value);
-            
-                        // Disparar el evento 'input' para simular la interacción del usuario
+                        // Establecer el valor del input
+                        locationInput.value = "Bogotá, Bogota, Colombia";
+                        console.log("Valor asignado:", locationInput.value);
+
+                        // Crear y disparar el evento 'input' para simular que el usuario lo ha ingresado
                         const event = new Event('input', {
                             bubbles: true,
                             cancelable: true,
                         });
-                        keywordsInput.dispatchEvent(event);
+                        locationInput.dispatchEvent(event);
                         console.log("Evento 'input' disparado.");
                     } else {
                         console.log("No se encontró el input.");
                     }
-
-
-
-
-
-
-
-
-                    
-
-
                   } else {
                     console.log("No se encontró el <textarea>.");
                   }
                 } else {
                   console.log("No se encontró el contenedor <div>.");
                 }
-              }, 1000); // Esperamos 4 segundos para asegurar que el <textarea> esté disponible después de hacer clic en el <div>
+              }, 4000); // Esperamos 4 segundos para asegurar que el <textarea> esté disponible después de hacer clic en el <div>
+    
             } catch (error) {
               console.error("Error al manejar el clic:", error);
             }
           });
-        });
-      } else {
-        console.log("No se encontraron elementos clickeables.");
+        } else {
+          console.log("No se encontró el elemento clickeable.");
+        }
+    
+      } catch (error) {
+        console.error("Error al inicializar el event listener:", error);
       }
-    } catch (error) {
-      console.error("Error al inicializar los event listeners:", error);
-    }
-  }, 2000);
+}, 2000);
   console.log("Listo");
-
-  
   
