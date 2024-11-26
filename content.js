@@ -55,12 +55,9 @@ setTimeout(() => {
               let fileName = spanElement.textContent.trim(); // Obtenemos el texto y eliminamos espacios innecesarios
               // Esperamos un poco para asegurarnos de que el siguiente elemento se habilite
               console.log(fileName);
-
-              fileName = 'DSC_1.jpg';
-              
               const endpoint = `http://localhost:3000/photos/search?name=${encodeURIComponent(fileName)}`;
               console.log("Llamando al endpoint:", endpoint);
-        
+
               fetch(endpoint)
                 .then(response => {
                   if (!response.ok) {
@@ -71,31 +68,37 @@ setTimeout(() => {
                 .then(data => {
                   const photoDB = data[0];
 
-                  setTimeout(() => {
-                    // Intentamos simular un clic en el contenedor <div> que contiene el <textarea>
-                    const divContainer = document.querySelector('.o_input_theme_input.o_Input_Input_input.o_EditorDescription_EditorDescription_description');
-                    if (divContainer) {
-                      divContainer.click();
-    
-                      setTimeout(() => {
-                        setValueDescription(photoDB.description);
-                        setKeywords(photoDB.keywords);
-                      }, 1000);
-                    } else {
-                      console.log("No se encontró el contenedor <div>.");
-                    }
-                  }, 1000);
+                  const wordsArray = photoDB.keywords.split(',').map(word => word.trim());
+
+                  // Si el número de palabras es mayor a 50, recorta el array
+                  if (wordsArray.length > 50) {
+                    const trimmedArray = wordsArray.slice(0, 50); // Mantiene solo las primeras 50
+                    const resultString = trimmedArray.join(', '); // Reconstruye el string
+                    const resultKeywords = resultString.replace(/\./g, '');
+
+                    setTimeout(() => {
+                      // Intentamos simular un clic en el contenedor <div> que contiene el <textarea>
+                      const divContainer = document.querySelector('.o_input_theme_input.o_Input_Input_input.o_EditorDescription_EditorDescription_description');
+                      if (divContainer) {
+                        divContainer.click();
+
+                        setTimeout(() => {
+                          setValueDescription(photoDB.description);
+                          setKeywords(resultKeywords);
+                        }, 1000);
+                      } else {
+                        console.log("No se encontró el contenedor <div>.");
+                      }
+                    }, 0);
+                  }
                   // Aquí puedes manejar la respuesta del servidor
                 })
                 .catch(error => {
                   console.error("Error al realizar el fetch:", error);
                 });
-
-              
             } else {
               console.log("No se encontró el span con el nombre del archivo.");
             }
-            // Esperamos 4 segundos para asegurar que el <textarea> esté disponible después de hacer clic en el <div>
           } catch (error) {
             console.error("Error al manejar el clic:", error);
           }
@@ -108,6 +111,5 @@ setTimeout(() => {
     console.error("Error al inicializar los event listeners:", error);
   }
 }, 2000);
-console.log("Listo");
 
 
