@@ -71,26 +71,25 @@ setTimeout(() => {
                   const wordsArray = photoDB.keywords.split(',').map(word => word.trim());
 
                   // Si el número de palabras es mayor a 50, recorta el array
-                  if (wordsArray.length > 50) {
-                    const trimmedArray = wordsArray.slice(0, 50); // Mantiene solo las primeras 50
-                    const resultString = trimmedArray.join(', '); // Reconstruye el string
-                    const resultKeywords = resultString.replace(/\./g, '');
+                  const trimmedArray = wordsArray.slice(0, 50); // Mantiene solo las primeras 50
+                  const resultString = trimmedArray.join(', '); // Reconstruye el string
+                  const resultKeywords = resultString.replace(/\./g, '');
 
-                    setTimeout(() => {
-                      // Intentamos simular un clic en el contenedor <div> que contiene el <textarea>
-                      const divContainer = document.querySelector('.o_input_theme_input.o_Input_Input_input.o_EditorDescription_EditorDescription_description');
-                      if (divContainer) {
-                        divContainer.click();
+                  setTimeout(() => {
+                    // Intentamos simular un clic en el contenedor <div> que contiene el <textarea>
+                    const divContainer = document.querySelector('.o_input_theme_input.o_Input_Input_input.o_EditorDescription_EditorDescription_description');
+                    if (divContainer) {
+                      divContainer.click();
 
-                        setTimeout(() => {
-                          setValueDescription(photoDB.description);
-                          setKeywords(resultKeywords);
-                        }, 1000);
-                      } else {
-                        console.log("No se encontró el contenedor <div>.");
-                      }
-                    }, 0);
-                  }
+                      setTimeout(() => {
+                        setValueDescription(photoDB.description);
+                        setKeywords(resultKeywords);
+                      }, 1000);
+                    } else {
+                      console.log("No se encontró el contenedor <div>.");
+                    }
+                  }, 0);
+
                   // Aquí puedes manejar la respuesta del servidor
                 })
                 .catch(error => {
