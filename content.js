@@ -1,4 +1,4 @@
-function setValueDescription() {
+function setValueDescription(description) {
   const divContainer = document.querySelector('.o_input_theme_input.o_Input_Input_input.o_EditorDescription_EditorDescription_description');
   // Ahora buscamos el <textarea> dentro del contenedor
   const textAreaElement = divContainer.querySelector('.o_input_theme_inputElement.o_Input_Input_inputElement.o_EditorDescription_EditorDescription_descriptionInput');
@@ -10,7 +10,7 @@ function setValueDescription() {
     console.log("Texto en el textarea activado.");
 
     // Asignamos el valor al <textarea>
-    textAreaElement.value = "nuevo valor minimo de cinco palabras que sean estás"; // Establece el nuevo valor en el <textarea>
+    textAreaElement.value = description; // Establece el nuevo valor en el <textarea>
     console.log("Nuevo valor asignado al <textarea>");
 
     // Simulamos el evento input para que el campo sea actualizado correctamente
@@ -22,19 +22,17 @@ function setValueDescription() {
   }
 }
 
-function setKeywords() {
+function setKeywords(keywords) {
   const keywordsInput = document.querySelector('.o_input_theme_inputElement.o_Input_Input_inputElement[name="pendingKeywords"]');
   if (keywordsInput) {
     keywordsInput.focus();
     // Asignar el string al valor del input
-    const keywords = "high, panorama, colombia, aspiration, from above, evening in the city, office, modern, landscape, outdoor, latin america, architecture, downtown, landmark, growth, clouds, bogota, blue, background, cityscape, city, capital, business, building, center, hello";
     keywordsInput.value = keywords;
 
     const event = new Event('input', {
       bubbles: true,
       cancelable: true,
     });
-
     keywordsInput.dispatchEvent(event);
   }
 }
@@ -54,23 +52,46 @@ setTimeout(() => {
 
             const spanElement = this.querySelector('span.o_List_List_itemText.o_list_theme_itemText.o_List_List_primary.o_list_theme_primary.o_EditorCard_EditorCard_itemTitle div');
             if (spanElement) {
-              const fileName = spanElement.textContent.trim(); // Obtenemos el texto y eliminamos espacios innecesarios
+              let fileName = spanElement.textContent.trim(); // Obtenemos el texto y eliminamos espacios innecesarios
               // Esperamos un poco para asegurarnos de que el siguiente elemento se habilite
               console.log(fileName);
-              setTimeout(() => {
-                // Intentamos simular un clic en el contenedor <div> que contiene el <textarea>
-                const divContainer = document.querySelector('.o_input_theme_input.o_Input_Input_input.o_EditorDescription_EditorDescription_description');
-                if (divContainer) {
-                  divContainer.click();
+
+              fileName = 'DSC_1.jpg';
+              
+              const endpoint = `http://localhost:3000/photos/search?name=${encodeURIComponent(fileName)}`;
+              console.log("Llamando al endpoint:", endpoint);
+        
+              fetch(endpoint)
+                .then(response => {
+                  if (!response.ok) {
+                    throw new Error(`Error en la respuesta: ${response.status} ${response.statusText}`);
+                  }
+                  return response.json(); // Si el endpoint devuelve JSON
+                })
+                .then(data => {
+                  const photoDB = data[0];
 
                   setTimeout(() => {
-                    setValueDescription();
-                    setKeywords();
+                    // Intentamos simular un clic en el contenedor <div> que contiene el <textarea>
+                    const divContainer = document.querySelector('.o_input_theme_input.o_Input_Input_input.o_EditorDescription_EditorDescription_description');
+                    if (divContainer) {
+                      divContainer.click();
+    
+                      setTimeout(() => {
+                        setValueDescription(photoDB.description);
+                        setKeywords(photoDB.keywords);
+                      }, 1000);
+                    } else {
+                      console.log("No se encontró el contenedor <div>.");
+                    }
                   }, 1000);
-                } else {
-                  console.log("No se encontró el contenedor <div>.");
-                }
-              }, 1000);
+                  // Aquí puedes manejar la respuesta del servidor
+                })
+                .catch(error => {
+                  console.error("Error al realizar el fetch:", error);
+                });
+
+              
             } else {
               console.log("No se encontró el span con el nombre del archivo.");
             }
