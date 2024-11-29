@@ -37,7 +37,7 @@ function setKeywords(keywords) {
   }
 }
 
-setTimeout(() => {
+function functionShutterstock() {
   try {
     // Seleccionamos todos los elementos con la clase especificada
     const clickableElements = document.querySelectorAll('.o_Card_Card_selectableCard.o_EditorCard_EditorCard_selectableCard');
@@ -108,6 +108,31 @@ setTimeout(() => {
     }
   } catch (error) {
     console.error("Error al inicializar los event listeners:", error);
+  }
+}
+
+setTimeout(() => {
+  const currentDomain = window.location.origin;
+
+  if (currentDomain.includes('submit.shutterstock')) {
+    console.log("Si");
+
+    functionShutterstock();
+  } else if (currentDomain.includes('contributor.stock.adobe.com')) {
+    try {
+      // Seleccionamos el elemento con las clases específicas
+      const targetElement = document.querySelector('div[role="option"][aria-selected="false"] .upload-tile__wrapper');
+
+      if (targetElement) {
+        // Simulamos el clic en el elemento
+        targetElement.click();
+        console.log("Clic realizado en el elemento de Adobe Stock:", targetElement);
+      } else {
+        console.log("No se encontró el elemento deseado en Adobe Stock.");
+      }
+    } catch (error) {
+      console.error("Error al intentar hacer clic en el elemento:", error);
+    }
   }
 }, 2000);
 
