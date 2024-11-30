@@ -194,6 +194,7 @@ setTimeout(() => {
                         return response.json(); // Si el endpoint devuelve JSON
                       })
                       .then(data => {
+                        console.log(data)
                         const photoDB = data[0];
                         const wordsArray = photoDB.keywords.split(',').map(word => word.trim());
 
@@ -224,6 +225,6 @@ setTimeout(() => {
       console.error("Error al intentar hacer clic en los elementos de Adobe Stock:", error);
     }
   }
-}, 1000);
+}, 2000);
 
 
