@@ -37,6 +37,95 @@ function setKeywords(keywords) {
   }
 }
 
+function setValueCategoryOne() {
+  setTimeout(() => {
+    // Selecciona el dropdown utilizando el atributo data-test-ref
+    const dropdownWrapper = document.querySelector('[data-test-ref="category-dropdown-one"]');
+
+    if (dropdownWrapper) {
+      // Busca el elemento que dispara la acción de abrir el dropdown dentro del wrapper
+      const dropdownTrigger = dropdownWrapper.querySelector('.o_Dropdown_Dropdown_inputInput');
+
+      if (dropdownTrigger) {
+        console.log("Debería abrir el dropdown específico");
+
+        // Simula los eventos necesarios para abrir el dropdown
+        dropdownTrigger.dispatchEvent(new Event('focus'));
+        dropdownTrigger.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+        dropdownTrigger.click();
+
+        // Espera un momento para que el dropdown se abra y selecciona una opción
+        setTimeout(() => {
+          const options = dropdownWrapper.querySelectorAll('.o_Dropdown_Dropdown_displayValue'); // Selecciona las opciones del dropdown
+
+          if (options.length > 0) {
+            const optionToSelect = Array.from(options).find(option => option.textContent.trim() === "Vacaciones"); // Cambia "Arte" por el texto de la opción deseada
+            //const optionToSelect = options[12];
+
+            if (optionToSelect) {
+              console.log(`Seleccionando la opción: ${optionToSelect.textContent.trim()}`);
+              optionToSelect.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+              optionToSelect.click();
+            } else {
+              console.error('No se encontró la opción especificada');
+            }
+          } else {
+            console.error('No se encontraron opciones en el dropdown');
+          }
+        }, 0); // Tiempo de espera para que el dropdown se abra completamente
+      } else {
+        console.error('No se encontró el elemento de disparo dentro del dropdown');
+      }
+    } else {
+      console.error('No se encontró el dropdown con el atributo data-test-ref="category-dropdown-one"');
+    }
+  }, 1000);
+}
+
+function setValueCategoryTwo() {
+  setTimeout(() => {
+    // Selecciona el dropdown utilizando el atributo data-test-ref
+    const dropdownWrapper = document.querySelector('[data-test-ref="category-dropdown-two"]');
+
+    if (dropdownWrapper) {
+      // Busca el elemento que dispara la acción de abrir el dropdown dentro del wrapper
+      const dropdownTrigger = dropdownWrapper.querySelector('.o_Dropdown_Dropdown_inputInput');
+
+      if (dropdownTrigger) {
+        // Simula los eventos necesarios para abrir el dropdown
+        dropdownTrigger.dispatchEvent(new Event('focus'));
+        dropdownTrigger.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+        dropdownTrigger.click();
+
+        // Espera un momento para que el dropdown se abra y selecciona una opción
+        setTimeout(() => {
+          const options = dropdownWrapper.querySelectorAll('.o_Dropdown_Dropdown_displayValue'); // Selecciona las opciones del dropdown
+
+          if (options.length > 0) {
+            // Cambia el índice según la opción deseada
+            const optionToSelect = Array.from(options).find(option => option.textContent.trim() === "Naturaleza"); // Cambia "Arte" por el texto de la opción deseada
+            // const optionToSelect = options[15]; // Por ejemplo, selecciona "Vacaciones"
+
+            if (optionToSelect) {
+              console.log(`Seleccionando la opción: ${optionToSelect.textContent.trim()}`);
+              optionToSelect.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+              optionToSelect.click();
+            } else {
+              console.error('No se encontró la opción especificada');
+            }
+          } else {
+            console.error('No se encontraron opciones en el dropdown');
+          }
+        }, 0); // Tiempo de espera para que el dropdown se abra completamente
+      } else {
+        console.error('No se encontró el elemento de disparo dentro del dropdown');
+      }
+    } else {
+      console.error('No se encontró el dropdown con el atributo data-test-ref="category-dropdown-two"');
+    }
+  }, 1000);
+}
+
 function functionShutterstock() {
   try {
     // Seleccionamos todos los elementos con la clase especificada
@@ -57,7 +146,8 @@ function functionShutterstock() {
               console.log(fileName);
               const endpoint = `http://localhost:3000/photos/search?name=${encodeURIComponent(fileName)}`;
               console.log("Llamando al endpoint:", endpoint);
-
+              setValueCategoryOne();
+              setValueCategoryTwo();
               fetch(endpoint)
                 .then(response => {
                   if (!response.ok) {

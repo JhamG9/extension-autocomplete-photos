@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "First Extension",
+  "name": "Image Jham GPT",
   "version": "1.0",
   "description": "Simular clics en elementos",
   "action": {
