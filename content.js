@@ -71,7 +71,7 @@ function setKeywords(keywords) {
   }
 }
 
-function setValueCategoryOne() {
+function setValueCategoryOne(category) {
   setTimeout(() => {
     const categorySelect = document.querySelector(
       '[aria-labelledby="category1"]'
@@ -81,7 +81,7 @@ function setValueCategoryOne() {
       const input = document.querySelector('input[name="category1"]');
 
       if (input) {
-        input.value = "11";
+        input.value = category;
         input.dispatchEvent(new Event("input", { bubbles: true }));
         input.dispatchEvent(new Event("change", { bubbles: true }));
 
@@ -93,67 +93,28 @@ function setValueCategoryOne() {
   }, 3000);
 }
 
-function setValueCategoryTwo() {
+function setValueCategoryTwo(category) {
   setTimeout(() => {
-    // Selecciona el dropdown utilizando el atributo data-test-ref
-    const dropdownWrapper = document.querySelector(
-      '[data-test-ref="category-dropdown-two"]'
+    const categorySelect = document.querySelector(
+      '[aria-labelledby="category2"]'
     );
 
-    if (dropdownWrapper) {
-      // Busca el elemento que dispara la acción de abrir el dropdown dentro del wrapper
-      const dropdownTrigger = dropdownWrapper.querySelector(
-        ".o_Dropdown_Dropdown_inputInput"
-      );
+    if (categorySelect) {
+      const input = document.querySelector('input[name="category2"]');
 
-      if (dropdownTrigger) {
-        // Simula los eventos necesarios para abrir el dropdown
-        dropdownTrigger.dispatchEvent(new Event("focus"));
-        dropdownTrigger.dispatchEvent(
-          new MouseEvent("mousedown", { bubbles: true })
-        );
-        dropdownTrigger.click();
+      if (input) {
+        input.value = category;
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+        input.dispatchEvent(new Event("change", { bubbles: true }));
 
-        // Espera un momento para que el dropdown se abra y selecciona una opción
-        setTimeout(() => {
-          const options = dropdownWrapper.querySelectorAll(
-            ".o_Dropdown_Dropdown_displayValue"
-          ); // Selecciona las opciones del dropdown
-
-          if (options.length > 0) {
-            // Cambia el índice según la opción deseada
-            const optionToSelect = Array.from(options).find(
-              (option) => option.textContent.trim() === "Naturaleza"
-            ); // Cambia "Arte" por el texto de la opción deseada
-            // const optionToSelect = options[15]; // Por ejemplo, selecciona "Vacaciones"
-
-            if (optionToSelect) {
-              console.log(
-                `Seleccionando la opción: ${optionToSelect.textContent.trim()}`
-              );
-              optionToSelect.dispatchEvent(
-                new MouseEvent("mousedown", { bubbles: true })
-              );
-              optionToSelect.click();
-            } else {
-              console.error("No se encontró la opción especificada");
-            }
-          } else {
-            console.error("No se encontraron opciones en el dropdown");
-          }
-        }, 0); // Tiempo de espera para que el dropdown se abra completamente
+        console.log("Valor asignado Categoria 2");
       } else {
-        console.error(
-          "No se encontró el elemento de disparo dentro del dropdown"
-        );
+        console.log("No se encontró el input con name=category11");
       }
-    } else {
-      console.error(
-        'No se encontró el dropdown con el atributo data-test-ref="category-dropdown-two"'
-      );
     }
-  }, 1000);
+  }, 3000);
 }
+
 
 function functionShutterstock() {
   try {
@@ -185,8 +146,7 @@ function functionShutterstock() {
                   fileName
                 )}`;
                 console.log("Llamando al endpoint:", endpoint);
-                setValueCategoryOne();
-                // setValueCategoryTwo();
+
                 fetch(endpoint)
                   .then((response) => {
                     if (!response.ok) {
@@ -208,6 +168,7 @@ function functionShutterstock() {
                     const resultString = trimmedArray.join(", "); // Reconstruye el string
                     const resultKeywords = resultString.replace(/\./g, "");
 
+
                     setTimeout(() => {
                       // Intentamos simular un clic en el contenedor <div> que contiene el <textarea>
                       const divContainer = document.querySelector(
@@ -219,6 +180,10 @@ function functionShutterstock() {
                         setTimeout(() => {
                           setValueDescription(photoDB.description);
                           setKeywords(resultKeywords);
+
+                          setValueCategoryOne(photoDB.categoryOne);
+                          setValueCategoryTwo(photoDB.categoryTwo);
+
                         }, 1000);
                       } else {
                         console.log("No se encontró el contenedor <div>.");
