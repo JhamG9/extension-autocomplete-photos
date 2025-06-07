@@ -411,6 +411,34 @@ function setKeywordsGettyImages(keywords) {
   keywordsInput.dispatchEvent(new Event('input', { bubbles: true }));
 }
 
+function functionGettyImages() {
+  document.querySelectorAll('[data-cy="item-card"]').forEach(card => {
+    card.addEventListener('click', () => {
+      const fileName = card.querySelector('[data-cy="contribution-file-name"]')?.textContent?.trim();
+
+      setTimeout(() => {
+        const endpoint = `http://localhost:3000/photos/search?name=${fileName}`;
+        fetch(endpoint)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(
+                `Error en la respuesta: ${response.status} ${response.statusText}`
+              );
+            }
+            return response.json(); // Si el endpoint devuelve JSON
+          })
+          .then((data) => {
+            const photo = data[0];
+            setTitleGettyImages(photo.title);
+            setDescriptionGettyImages(photo.description);
+            setKeywordsGettyImages(photo.keywords);
+          });
+        setCountryGettyImages();
+      }, 1000);
+    });
+  });
+}
+
 setTimeout(() => {
   const currentDomain = window.location.origin;
 
@@ -419,35 +447,9 @@ setTimeout(() => {
   } else if (currentDomain.includes("contributor.stock.adobe.com")) {
     functionAdobeStock();
   } else if (currentDomain.includes("gettyimages.com")) {
-    document.querySelectorAll('[data-cy="item-card"]').forEach(card => {
-      card.addEventListener('click', () => {
-        const fileName = card.querySelector('[data-cy="contribution-file-name"]')?.textContent?.trim();
+    functionGettyImages();
 
-        setTimeout(() => {
-          const endpoint = `http://localhost:3000/photos/search?name=${fileName
-            }`;
 
-          fetch(endpoint)
-            .then((response) => {
-              if (!response.ok) {
-                throw new Error(
-                  `Error en la respuesta: ${response.status} ${response.statusText}`
-                );
-              }
-              return response.json(); // Si el endpoint devuelve JSON
-            })
-            .then((data) => {
-              const photo = data[0];
-              console.log("Photo =>",photo);
-              
-              setTitleGettyImages(photo.title);
-              setDescriptionGettyImages(photo.description);
-              setKeywordsGettyImages(photo.keywords);
-            });
-          setCountryGettyImages();
-        }, 1000);
-      });
-    });
   }
 }, 3000);
 
