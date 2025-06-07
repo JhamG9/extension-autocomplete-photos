@@ -257,96 +257,200 @@ function setKeywordsAdobe(keywords) {
   }
 }
 
+function functionAdobeStock() {
+  try {
+    // Seleccionamos todos los elementos que contienen las imágenes (cada uno tiene la clase 'upload-tile__wrapper')
+    const clickableElements = document.querySelectorAll(
+      'div[role="option"][aria-selected="false"] .upload-tile__wrapper'
+    );
+
+    if (clickableElements.length > 0) {
+      clickableElements.forEach((element, index) => {
+        // Agregamos un evento de clic a cada uno de los elementos
+        element.addEventListener("click", () => {
+          // Al hacer clic, mostramos el índice y la información del elemento
+          console.log(
+            `Clic realizado en el elemento número ${index + 1}:`,
+            element
+          );
+
+          // Ahora buscamos el popup que se abre dentro de 'asset-sidebar-footer', esperamos un poco para asegurarnos de que aparezca
+          setTimeout(() => {
+            const assetSidebarFooter = document.querySelector(
+              '[data-t="asset-sidebar-footer"]'
+            );
+
+            if (assetSidebarFooter) {
+              // Dentro de este contenedor, buscamos el div con la clase 'text-sregular' que contiene el nombre original
+              const originalNameDiv =
+                assetSidebarFooter.querySelector(".text-sregular");
+
+              if (originalNameDiv) {
+                // Extraemos el texto que contiene el nombre original (después de "Original name(s):")
+                const originalNameText = originalNameDiv.textContent.trim();
+                const originalNameMatch = originalNameText.match(
+                  /(?:Original name\(s\)|Nombre\/s original\/es):\s*(.+)$/
+                );
+
+                if (originalNameMatch && originalNameMatch[1]) {
+                  const fileName = originalNameMatch[1];
+                  const endpoint = `http://localhost:3000/photos/search?name=${encodeURIComponent(
+                    fileName
+                  )}`;
+
+                  fetch(endpoint)
+                    .then((response) => {
+                      if (!response.ok) {
+                        throw new Error(
+                          `Error en la respuesta: ${response.status} ${response.statusText}`
+                        );
+                      }
+                      return response.json(); // Si el endpoint devuelve JSON
+                    })
+                    .then((data) => {
+                      console.log(data);
+                      const photoDB = data[0];
+                      const wordsArray = photoDB.keywords
+                        .split(",")
+                        .map((word) => word.trim());
+
+                      const trimmedArray = wordsArray.slice(0, 49); // Mantiene solo las primeras 50
+                      const resultString = trimmedArray.join(", "); // Reconstruye el string
+                      const resultKeywords = resultString.replace(/\./g, "");
+                      setTitleAdobe(photoDB.description);
+                      setKeywordsAdobe(resultKeywords);
+                    });
+                } else {
+                  console.log("No se pudo extraer el nombre original.");
+                }
+              } else {
+                console.log("No se encontró el div con el nombre original.");
+              }
+            } else {
+              console.log(
+                'No se encontró el contenedor "asset-sidebar-footer"'
+              );
+            }
+          }, 1000); // Esperamos un segundo para que el popup se cargue
+        });
+      });
+    } else {
+      console.log("No se encontraron elementos de Adobe Stock.");
+    }
+  } catch (error) {
+    console.error(
+      "Error al intentar hacer clic en los elementos de Adobe Stock:",
+      error
+    );
+  }
+}
+
+// ****************************************************************
+// ************************* GETTY IMAGES *************************
+// ****************************************************************
+
+function setCountryGettyImages() {
+  // 1. Referencia al input
+  const input = document.querySelector('#metadata-select-country_of_shoot');
+
+  // 2. Hacer focus y escribir "Col"
+  input.focus();
+  input.value = 'Col';
+
+  // 3. Disparar evento input para que Material UI detecte el cambio
+  input.dispatchEvent(new Event('input', { bubbles: true }));
+
+  // 4. Esperar un momento para que el dropdown cargue las opciones
+  setTimeout(() => {
+    // 5. Buscar el dropdown con opciones (normalmente un <ul> con clases MuiAutocomplete-popper o similar)
+    const dropdown = document.querySelector('ul.MuiAutocomplete-listbox');
+
+    if (!dropdown) {
+      console.log('No se encontró la lista de opciones');
+      return;
+    }
+
+    // 6. Buscar la opción que contenga "Colombia"
+    const option = Array.from(dropdown.querySelectorAll('li')).find(li =>
+      li.textContent.toLowerCase().includes('colombia')
+    );
+
+    if (option) {
+      // 7. Hacer click para seleccionar
+      option.click();
+      console.log('Colombia seleccionada');
+    } else {
+      console.log('Opción Colombia no encontrada');
+    }
+  }, 500);
+}
+
+function setTitleGettyImages(title) {
+  const textarea = document.querySelector('[data-cy="md-headline"] textarea[name="headline"]');
+  textarea.focus();
+  textarea.click();
+  textarea.value = title;
+  // Notificamos a React que el valor cambió
+  const event = new Event('input', { bubbles: true });
+  textarea.dispatchEvent(event);
+}
+
+function setDescriptionGettyImages(description) {
+  const textarea2 = document.querySelector('[data-cy="md-caption"] textarea[name="caption"]');
+  textarea2.focus();
+  textarea2.click();
+  textarea2.value = description;
+  const event2 = new Event('input', { bubbles: true });
+  textarea2.dispatchEvent(event2);
+}
+
+function setKeywordsGettyImages(keywords) {
+  const keywordsInput = document.querySelector('div[data-cy="metadata-keyword-multiselect"] textarea');
+  keywordsInput.focus();
+  keywordsInput.value = keywords;
+  keywordsInput.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
 setTimeout(() => {
   const currentDomain = window.location.origin;
 
   if (currentDomain.includes("submit.shutterstock")) {
     functionShutterstock();
   } else if (currentDomain.includes("contributor.stock.adobe.com")) {
-    try {
-      // Seleccionamos todos los elementos que contienen las imágenes (cada uno tiene la clase 'upload-tile__wrapper')
-      const clickableElements = document.querySelectorAll(
-        'div[role="option"][aria-selected="false"] .upload-tile__wrapper'
-      );
+    functionAdobeStock();
+  } else if (currentDomain.includes("gettyimages.com")) {
+    document.querySelectorAll('[data-cy="item-card"]').forEach(card => {
+      card.addEventListener('click', () => {
+        const fileName = card.querySelector('[data-cy="contribution-file-name"]')?.textContent?.trim();
 
-      if (clickableElements.length > 0) {
-        clickableElements.forEach((element, index) => {
-          // Agregamos un evento de clic a cada uno de los elementos
-          element.addEventListener("click", () => {
-            // Al hacer clic, mostramos el índice y la información del elemento
-            console.log(
-              `Clic realizado en el elemento número ${index + 1}:`,
-              element
-            );
+        setTimeout(() => {
+          const endpoint = `http://localhost:3000/photos/search?name=${fileName
+            }`;
 
-            // Ahora buscamos el popup que se abre dentro de 'asset-sidebar-footer', esperamos un poco para asegurarnos de que aparezca
-            setTimeout(() => {
-              const assetSidebarFooter = document.querySelector(
-                '[data-t="asset-sidebar-footer"]'
-              );
-
-              if (assetSidebarFooter) {
-                // Dentro de este contenedor, buscamos el div con la clase 'text-sregular' que contiene el nombre original
-                const originalNameDiv =
-                  assetSidebarFooter.querySelector(".text-sregular");
-
-                if (originalNameDiv) {
-                  // Extraemos el texto que contiene el nombre original (después de "Original name(s):")
-                  const originalNameText = originalNameDiv.textContent.trim();
-                  const originalNameMatch = originalNameText.match(
-                    /Original name\(s\):\s*(.*)/
-                  );
-
-                  if (originalNameMatch && originalNameMatch[1]) {
-                    const fileName = originalNameMatch[1];
-                    const endpoint = `http://localhost:3000/photos/search?name=${encodeURIComponent(
-                      fileName
-                    )}`;
-
-                    fetch(endpoint)
-                      .then((response) => {
-                        if (!response.ok) {
-                          throw new Error(
-                            `Error en la respuesta: ${response.status} ${response.statusText}`
-                          );
-                        }
-                        return response.json(); // Si el endpoint devuelve JSON
-                      })
-                      .then((data) => {
-                        console.log(data);
-                        const photoDB = data[0];
-                        const wordsArray = photoDB.keywords
-                          .split(",")
-                          .map((word) => word.trim());
-
-                        const trimmedArray = wordsArray.slice(0, 49); // Mantiene solo las primeras 50
-                        const resultString = trimmedArray.join(", "); // Reconstruye el string
-                        const resultKeywords = resultString.replace(/\./g, "");
-                        setTitleAdobe(photoDB.description);
-                        setKeywordsAdobe(resultKeywords);
-                      });
-                  } else {
-                    console.log("No se pudo extraer el nombre original.");
-                  }
-                } else {
-                  console.log("No se encontró el div con el nombre original.");
-                }
-              } else {
-                console.log(
-                  'No se encontró el contenedor "asset-sidebar-footer"'
+          fetch(endpoint)
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(
+                  `Error en la respuesta: ${response.status} ${response.statusText}`
                 );
               }
-            }, 1000); // Esperamos un segundo para que el popup se cargue
-          });
-        });
-      } else {
-        console.log("No se encontraron elementos de Adobe Stock.");
-      }
-    } catch (error) {
-      console.error(
-        "Error al intentar hacer clic en los elementos de Adobe Stock:",
-        error
-      );
-    }
+              return response.json(); // Si el endpoint devuelve JSON
+            })
+            .then((data) => {
+              const photo = data[0];
+              console.log("Photo =>",photo);
+              
+              setTitleGettyImages(photo.title);
+              setDescriptionGettyImages(photo.description);
+              setKeywordsGettyImages(photo.keywords);
+            });
+          setCountryGettyImages();
+        }, 1000);
+      });
+    });
   }
 }, 3000);
+
+// ****************************************************************
+// ************************* GETTY IMAGES *************************
+// ****************************************************************
