@@ -346,7 +346,7 @@ function functionAdobeStock() {
 }
 
 // ****************************************************************
-// ************************* GETTY IMAGES *************************
+// ******************* START GETTY IMAGES *************************
 // ****************************************************************
 
 function setCountryGettyImages() {
@@ -439,17 +439,94 @@ function functionGettyImages() {
   });
 }
 
+// ****************************************************************
+// ****************** FINISH GETTY IMAGES *************************
+// ****************************************************************
+
+
+// ****************************************************************
+// ******************* START DREAMSTIEM *************************
+// ****************************************************************
+
+/**
+ * Requiere dar click en el Filename o Date del listado de fotos a vender
+ * Luego dar click en la foto para redireccionar, tienes 5 segundos para esto
+ * Se puede cambiar el tiempo en el setTimeout
+ */
+function functionDreamsTime() {
+  setTimeout(() => {
+    document.addEventListener('click', (event) => {
+      const item = event.target.closest('.upload-item');
+      const fileNameElement = item.querySelector('.js-filenamefull');
+      const fileName = fileNameElement?.getAttribute('data-text');
+
+      console.log("filename =>", fileName);
+      if (fileName) {
+        setTimeout(() => {
+          const endpoint = `http://localhost:3000/photos/search?name=${fileName}`;
+          fetch(endpoint)
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(
+                  `Error en la respuesta: ${response.status} ${response.statusText}`
+                );
+              }
+              return response.json(); // Si el endpoint devuelve JSON
+            })
+            .then((data) => {
+              const photo = data[0];
+              console.log("Photo => ", photo);
+
+              const titleInput = document.getElementById('title');
+              if (titleInput) {
+                titleInput.value = photo.title;
+              }
+
+              const descriptionTextarea = document.getElementById('description');
+              if (descriptionTextarea) {
+                descriptionTextarea.value = photo.description;
+              }
+
+              const keywordsInput = document.getElementById('keywords_tag');
+              if (keywordsInput) {
+                keywordsInput.focus();
+                keywordsInput.value = photo.keywords;
+                keywordsInput.dispatchEvent(new Event('input', { bubbles: true }));
+
+                setTimeout(() => {
+                  const enterEvent = new KeyboardEvent('keydown', {
+                    key: 'Enter',
+                    keyCode: 13,
+                    which: 13,
+                    bubbles: true
+                  });
+                  keywordsInput.dispatchEvent(enterEvent);
+                }, 100);
+              }
+            });
+        }, 5000);
+      }
+    });
+  }, 2000);
+}
+
+// ****************************************************************
+// ******************** FINISH DREAMSTIEM *************************
+// ****************************************************************
+
+
+
 setTimeout(() => {
   const currentDomain = window.location.origin;
-
+  
   if (currentDomain.includes("submit.shutterstock")) {
     functionShutterstock();
   } else if (currentDomain.includes("contributor.stock.adobe.com")) {
     functionAdobeStock();
   } else if (currentDomain.includes("gettyimages.com")) {
     functionGettyImages();
-
-
+  } else if (currentDomain.includes("dreamstime.com")) {
+    functionDreamsTime();
   }
 }, 3000);
 
