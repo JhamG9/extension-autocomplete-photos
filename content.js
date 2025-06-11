@@ -348,7 +348,6 @@ function functionAdobeStock() {
 // ****************************************************************
 // ******************* START GETTY IMAGES *************************
 // ****************************************************************
-
 function setCountryGettyImages() {
   // 1. Referencia al input
   const input = document.querySelector('#metadata-select-country_of_shoot');
@@ -438,14 +437,16 @@ function functionGettyImages() {
     });
   });
 }
-
 // ****************************************************************
 // ****************** FINISH GETTY IMAGES *************************
 // ****************************************************************
 
 
+
+
+
 // ****************************************************************
-// ******************* START DREAMSTIEM *************************
+// ********************* START DREAMSTIEM *************************
 // ****************************************************************
 
 /**
@@ -511,14 +512,177 @@ function functionDreamsTime() {
 }
 
 // ****************************************************************
-// ******************** FINISH DREAMSTIEM *************************
+// ******************** FINISH DREAMSTIME *************************
 // ****************************************************************
+
+
+
+// ****************************************************************
+// ********************* START DEPOSITPHOTOS **********************
+// ****************************************************************
+
+function setKeywordsDepositPhotos(keywordsBackend, item) {
+  const keywords = keywordsBackend.split(',').map(k => k.trim());
+  for (const word of keywords) {
+    const inputContainer = item.querySelector('._tagseditor__item.tagseditor__item_new');
+    const inputSpan = inputContainer?.querySelector('span[contenteditable="true"]');
+
+    if (!inputSpan) break;
+
+    inputSpan.focus();
+
+    // Limpia el contenido por si quedó algo previo
+    inputSpan.textContent = '';
+    inputSpan.dispatchEvent(new InputEvent('input', { bubbles: true }));
+
+    // Simula que el usuario escribe la palabra
+    inputSpan.textContent = word;
+    inputSpan.dispatchEvent(new InputEvent('input', { bubbles: true }));
+
+    // Simula tecla Enter para confirmar el tag
+    const enterEvent = new KeyboardEvent('keydown', {
+      key: 'Enter',
+      code: 'Enter',
+      keyCode: 13,
+      which: 13,
+      bubbles: true,
+      cancelable: true
+    });
+    inputSpan.dispatchEvent(enterEvent);
+  }
+}
+
+var lastIdDepositPhotos = '';
+/**
+ * Se debe de dar click en el input de keywords
+ * y luego se selecciona y envia la foto
+ */
+function functionDepositPhotos() {
+  const items = document.querySelectorAll('.itemeditor');
+  console.log("Elementos encontrados: ", items.length);
+
+  items.forEach(item => {
+    item.addEventListener('click', (event) => {
+
+      const id = item.getAttribute('id');
+      if (id === lastIdDepositPhotos) return;
+      lastIdDepositPhotos = id;
+
+      const fileNameSpan = item.querySelector('.itemeditor__name');
+      if (fileNameSpan) {
+        const fileName = fileNameSpan.textContent.trim();
+
+        const endpoint = `http://localhost:3000/photos/search?name=${fileName}`;
+        fetch(endpoint)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(
+                `Error en la respuesta: ${response.status} ${response.statusText}`
+              );
+            }
+            return response.json(); // Si el endpoint devuelve JSON
+          })
+          .then(async (data) => {
+            const photo = data[0];
+            console.log(photo);
+
+            // Buscar el textarea dentro del item y asignarle "Hello World"
+            const textarea = item.querySelector('textarea.itemeditor__input_description');
+            if (textarea) {
+              textarea.value = photo.description;
+            }
+
+            setKeywordsDepositPhotos(photo.keywords, item);
+          });
+      }
+    });
+  });
+}
+// ****************************************************************
+// ********************* FINISH DEPOSITPHOTOS **********************
+// ****************************************************************
+
+
+
+// ****************************************************************
+// ********************** START ALAMY *****************************
+// ****************************************************************
+function functionAlamy() {
+  document.querySelectorAll('li.grid img').forEach(img => {
+    img.addEventListener('click', function (e) {
+      const li = e.target.closest('li.grid');
+      if (!li) return;
+
+      const filenameSpan = li.querySelector('.img_cap');
+      if (filenameSpan) {
+        const fileName = filenameSpan.textContent.trim();
+        console.log('Nombre del archivo:', fileName);
+
+
+        const endpoint = `http://localhost:3000/photos/search?name=${fileName}`;
+        fetch(endpoint)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(
+                `Error en la respuesta: ${response.status} ${response.statusText}`
+              );
+            }
+            return response.json(); // Si el endpoint devuelve JSON
+          })
+          .then(async (data) => {
+            const image = data[0];
+
+
+            setTimeout(() => {
+              const captionTextarea = document.querySelector('textarea[name="captionText"]');
+              if (captionTextarea) {
+                captionTextarea.value = image.description;
+
+                // Disparamos el evento input para que AngularJS detecte el cambio
+                captionTextarea.dispatchEvent(new Event('input', { bubbles: true }));
+                console.log('Texto insertado en el caption');
+              }
+
+              const wordsArray = image.keywords
+                .split(',')
+                .map(word => word.trim())
+                .filter(word => word.length > 0)
+                .slice(0, 50);
+              const keywordsString = wordsArray.join(', ');
+
+              const keywordInput = document.querySelector('#add-keyword');
+              keywordInput.value = keywordsString;
+
+              keywordInput.dispatchEvent(new Event('input', { bubbles: true }));
+
+              // Simulamos la tecla Enter para que se dispare ng-keypress="AddNewKeyword($event);"
+              const event = new KeyboardEvent('keypress', {
+                bubbles: true,
+                cancelable: true,
+                key: 'Enter',
+                keyCode: 13,
+                which: 13
+              });
+              keywordInput.dispatchEvent(event);
+            }, 1000);
+          });
+      }
+    });
+  });
+
+}
+
+// ****************************************************************
+// ********************** FINISH ALAMY *****************************
+// ****************************************************************
+
 
 
 
 setTimeout(() => {
   const currentDomain = window.location.origin;
-  
+
+  console.log(currentDomain);
   if (currentDomain.includes("submit.shutterstock")) {
     functionShutterstock();
   } else if (currentDomain.includes("contributor.stock.adobe.com")) {
@@ -527,9 +691,10 @@ setTimeout(() => {
     functionGettyImages();
   } else if (currentDomain.includes("dreamstime.com")) {
     functionDreamsTime();
+  } else if (currentDomain.includes("depositphotos.com")) {
+    functionDepositPhotos();
+  } else {
+    functionAlamy();
   }
 }, 3000);
 
-// ****************************************************************
-// ************************* GETTY IMAGES *************************
-// ****************************************************************
