@@ -607,6 +607,31 @@ function functionDepositPhotos() {
 // ****************************************************************
 // ********************** START ALAMY *****************************
 // ****************************************************************
+function setKeywordsAlamy(keywordsImage) {
+
+  const wordsArray = keywordsImage
+    .split(',')
+    .map(word => word.trim())
+    .filter(word => word.length > 0)
+    .slice(0, 50);
+  const keywordsString = wordsArray.join(', ');
+
+  const keywordInput = document.querySelector('#add-keyword');
+  keywordInput.value = keywordsString;
+
+  keywordInput.dispatchEvent(new Event('input', { bubbles: true }));
+
+  // Simulamos la tecla Enter para que se dispare ng-keypress="AddNewKeyword($event);"
+  const event = new KeyboardEvent('keypress', {
+    bubbles: true,
+    cancelable: true,
+    key: 'Enter',
+    keyCode: 13,
+    which: 13
+  });
+  keywordInput.dispatchEvent(event);
+}
+
 function functionAlamy() {
   document.querySelectorAll('li.grid img').forEach(img => {
     img.addEventListener('click', function (e) {
@@ -617,7 +642,6 @@ function functionAlamy() {
       if (filenameSpan) {
         const fileName = filenameSpan.textContent.trim();
         console.log('Nombre del archivo:', fileName);
-
 
         const endpoint = `http://localhost:3000/photos/search?name=${fileName}`;
         fetch(endpoint)
@@ -631,39 +655,15 @@ function functionAlamy() {
           })
           .then(async (data) => {
             const image = data[0];
-
-
             setTimeout(() => {
               const captionTextarea = document.querySelector('textarea[name="captionText"]');
               if (captionTextarea) {
                 captionTextarea.value = image.description;
 
-                // Disparamos el evento input para que AngularJS detecte el cambio
                 captionTextarea.dispatchEvent(new Event('input', { bubbles: true }));
                 console.log('Texto insertado en el caption');
               }
-
-              const wordsArray = image.keywords
-                .split(',')
-                .map(word => word.trim())
-                .filter(word => word.length > 0)
-                .slice(0, 50);
-              const keywordsString = wordsArray.join(', ');
-
-              const keywordInput = document.querySelector('#add-keyword');
-              keywordInput.value = keywordsString;
-
-              keywordInput.dispatchEvent(new Event('input', { bubbles: true }));
-
-              // Simulamos la tecla Enter para que se dispare ng-keypress="AddNewKeyword($event);"
-              const event = new KeyboardEvent('keypress', {
-                bubbles: true,
-                cancelable: true,
-                key: 'Enter',
-                keyCode: 13,
-                which: 13
-              });
-              keywordInput.dispatchEvent(event);
+              setKeywordsAlamy(image.keywords);
             }, 1000);
           });
       }
@@ -693,7 +693,7 @@ setTimeout(() => {
     functionDreamsTime();
   } else if (currentDomain.includes("depositphotos.com")) {
     functionDepositPhotos();
-  } else {
+  } else if (currentDomain.includes("alamy.com")) {
     functionAlamy();
   }
 }, 3000);
