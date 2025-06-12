@@ -414,7 +414,8 @@ function functionGettyImages() {
   document.querySelectorAll('[data-cy="item-card"]').forEach(card => {
     card.addEventListener('click', () => {
       const fileName = card.querySelector('[data-cy="contribution-file-name"]')?.textContent?.trim();
-
+      console.log(fileName);
+      
       setTimeout(() => {
         const endpoint = `http://localhost:3000/photos/search?name=${fileName}`;
         fetch(endpoint)
