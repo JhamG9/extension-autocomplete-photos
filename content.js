@@ -381,7 +381,7 @@ function setCountryGettyImages() {
     } else {
       console.log('Opción Colombia no encontrada');
     }
-  }, 500);
+  }, 1500);
 }
 
 function setTitleGettyImages(title) {
@@ -411,11 +411,13 @@ function setKeywordsGettyImages(keywords) {
 }
 
 function functionGettyImages() {
+  console.log("Listo");
+
   document.querySelectorAll('[data-cy="item-card"]').forEach(card => {
     card.addEventListener('click', () => {
       const fileName = card.querySelector('[data-cy="contribution-file-name"]')?.textContent?.trim();
       console.log(fileName);
-      
+
       setTimeout(() => {
         const endpoint = `http://localhost:3000/photos/search?name=${fileName}`;
         fetch(endpoint)
@@ -432,8 +434,10 @@ function functionGettyImages() {
             setTitleGettyImages(photo.title);
             setDescriptionGettyImages(photo.description);
             setKeywordsGettyImages(photo.keywords);
+
+            setCountryGettyImages();
+
           });
-        setCountryGettyImages();
       }, 1000);
     });
   });
@@ -506,10 +510,12 @@ function functionDreamsTime() {
                 }, 100);
               }
             });
-        }, 5000);
+        }, 1000);
       }
     });
-  }, 2000);
+  }, 100);
+
+
 }
 
 // ****************************************************************
@@ -571,7 +577,10 @@ function functionDepositPhotos() {
 
       const fileNameSpan = item.querySelector('.itemeditor__name');
       if (fileNameSpan) {
+
         const fileName = fileNameSpan.textContent.trim();
+        console.log("Filename =>", fileName);
+
 
         const endpoint = `http://localhost:3000/photos/search?name=${fileName}`;
         fetch(endpoint)
@@ -585,12 +594,14 @@ function functionDepositPhotos() {
           })
           .then(async (data) => {
             const photo = data[0];
-            console.log(photo);
 
             // Buscar el textarea dentro del item y asignarle "Hello World"
             const textarea = item.querySelector('textarea.itemeditor__input_description');
             if (textarea) {
+              textarea.focus();
               textarea.value = photo.description;
+
+              textarea.dispatchEvent(new Event('input', { bubbles: true }));
             }
 
             setKeywordsDepositPhotos(photo.keywords, item);
@@ -640,9 +651,10 @@ function functionAlamy() {
       if (!li) return;
 
       const filenameSpan = li.querySelector('.img_cap');
+      console.log('Nombre del archivo:', filenameSpan);
+
       if (filenameSpan) {
         const fileName = filenameSpan.textContent.trim();
-        console.log('Nombre del archivo:', fileName);
 
         const endpoint = `http://localhost:3000/photos/search?name=${fileName}`;
         fetch(endpoint)
@@ -671,6 +683,17 @@ function functionAlamy() {
     });
   });
 
+  const button = document.getElementById('submitsearch');
+  const clearSelectionInput = document.querySelector('#automationClearSelection input.deselect-all');
+  if (button) {
+    button.addEventListener('click', () => {
+      setTimeout(() => {
+        clearSelectionInput.click();
+      }, 500);
+    });
+  }
+
+
 }
 
 // ****************************************************************
@@ -689,13 +712,19 @@ setTimeout(() => {
   } else if (currentDomain.includes("contributor.stock.adobe.com")) {
     functionAdobeStock();
   } else if (currentDomain.includes("gettyimages.com")) {
-    functionGettyImages();
+    setTimeout(() => {
+      functionGettyImages();
+    }, 8000);
   } else if (currentDomain.includes("dreamstime.com")) {
     functionDreamsTime();
   } else if (currentDomain.includes("depositphotos.com")) {
     functionDepositPhotos();
   } else if (currentDomain.includes("alamy.com")) {
-    functionAlamy();
+    setTimeout(() => {
+      functionAlamy();
+      console.log("Listo!");
+
+    }, 5000); // Tiempo para dejar la vista de las imagenes para vender
   }
 }, 3000);
 
