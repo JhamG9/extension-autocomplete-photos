@@ -378,6 +378,23 @@ function setCountryGettyImages() {
       // 7. Hacer click para seleccionar
       option.click();
       console.log('Colombia seleccionada');
+
+
+      setTimeout(() => {
+        const saveButton = document.querySelector('button[data-cy="save-metadata"]');
+        const sumbitButton = document.querySelector('[data-cy="submit-button"]');
+        if (saveButton) {
+
+          saveButton.addEventListener('click', function () {
+
+            setTimeout(() => {
+              sumbitButton.click();
+            }, 1000);
+          });
+          // saveButton.click(); // simula el clic
+          // clearInterval(interval);
+        }
+      }, 100);
     } else {
       console.log('Opción Colombia no encontrada');
     }
@@ -436,7 +453,6 @@ function functionGettyImages() {
             setKeywordsGettyImages(photo.keywords);
 
             setCountryGettyImages();
-
           });
       }, 1000);
     });
@@ -596,12 +612,41 @@ function functionDepositPhotos() {
             const photo = data[0];
 
             // Buscar el textarea dentro del item y asignarle "Hello World"
+            // const textarea = item.querySelector('textarea.itemeditor__input_description');
+            // if (textarea) {
+            //   textarea.focus();
+            //   textarea.value = photo.description;
+
+            //   textarea.dispatchEvent(new Event('input', { bubbles: true }));
+            // }
+
+
             const textarea = item.querySelector('textarea.itemeditor__input_description');
             if (textarea) {
               textarea.focus();
-              textarea.value = photo.description;
 
+              // Vaciar el valor inicial (por si acaso)
+              textarea.value = '';
               textarea.dispatchEvent(new Event('input', { bubbles: true }));
+
+              const text = photo.description;
+
+              // Función para simular escritura carácter por carácter
+              let index = 0;
+              const typeChar = () => {
+                if (index < text.length) {
+                  textarea.value += text[index];
+                  textarea.dispatchEvent(new Event('input', { bubbles: true }));
+
+                  index++;
+                  setTimeout(typeChar, 5); // velocidad de escritura (50 ms entre caracteres)
+                } else {
+                  // Opcional: lanzar un 'change' al final
+                  textarea.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+              };
+
+              typeChar();
             }
 
             setKeywordsDepositPhotos(photo.keywords, item);
@@ -626,7 +671,11 @@ function setKeywordsAlamy(keywordsImage) {
     .map(word => word.trim())
     .filter(word => word.length > 0)
     .slice(0, 50);
-  const keywordsString = wordsArray.join(', ');
+  // const keywordsString = wordsArray.join(', ');
+
+  const keywordsString = wordsArray.reverse().join(', ');
+  console.log(keywordsString);
+  
 
   const keywordInput = document.querySelector('#add-keyword');
   keywordInput.value = keywordsString;
@@ -642,6 +691,40 @@ function setKeywordsAlamy(keywordsImage) {
     which: 13
   });
   keywordInput.dispatchEvent(event);
+}
+
+function assignFirstSuperTagsAlamy() {
+  setTimeout(() => {
+    const tagsContainer = document.getElementById('mtKeywords');
+    if (!tagsContainer) {
+      console.warn('No se encontró la lista de tags');
+      return;
+    }
+
+    // Selecciona todos los íconos de estrella
+    const stars = tagsContainer.querySelectorAll('i.icon-tag-star.dark-grey');
+    let selectedCount = 0;
+
+    for (let star of stars) {
+      // Asegúrate de que el ícono no esté ya activado (puedes agregar una condición si cambia de clase al activarse)
+      if (selectedCount >= 10) break;
+
+      // Simular el clic
+      star.click();
+      selectedCount++;
+    }
+
+    // setTimeout(() => {
+    //   const saveButton = document.getElementById('submitsearch');
+    //   if (saveButton) {
+    //     saveButton.click();
+    //     console.log('✅ Botón "Save" fue clickeado automáticamente.');
+    //   } else {
+    //     console.warn('⚠️ No se encontró el botón de guardar con id="submitsearch".');
+    //   }
+    // }, 500);
+
+  }, 1000);
 }
 
 function functionAlamy() {
@@ -677,6 +760,7 @@ function functionAlamy() {
                 console.log('Texto insertado en el caption');
               }
               setKeywordsAlamy(image.keywords);
+              assignFirstSuperTagsAlamy();
             }, 1000);
           });
       }
@@ -724,7 +808,7 @@ setTimeout(() => {
       functionAlamy();
       console.log("Listo!");
 
-    }, 5000); // Tiempo para dejar la vista de las imagenes para vender
+    }, 20000); // Tiempo para dejar la vista de las imagenes para vender
   }
 }, 3000);
 
