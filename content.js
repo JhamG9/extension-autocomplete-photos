@@ -475,59 +475,150 @@ function functionGettyImages() {
  * Luego dar click en la foto para redireccionar, tienes 5 segundos para esto
  * Se puede cambiar el tiempo en el setTimeout
  */
+
+function clickAt(x, y) {
+  const element = document.elementFromPoint(x, y);
+  if (element) {
+    const eventOptions = {
+      bubbles: true,
+      cancelable: true,
+      clientX: x,
+      clientY: y
+    };
+
+    element.dispatchEvent(new MouseEvent("mouseover", eventOptions));
+    element.dispatchEvent(new MouseEvent("mousedown", eventOptions));
+    element.dispatchEvent(new MouseEvent("mouseup", eventOptions));
+    element.dispatchEvent(new MouseEvent("click", eventOptions));
+
+    return element;
+  } else {
+    console.warn(`⚠️ No se encontró ningún elemento en (${x}, ${y})`);
+  }
+}
+
 function functionDreamsTime() {
+  setTimeout(() => {
+    const elementImg = clickAt(101, 430);
+    const span = elementImg.querySelector('.js-filenamefull');
+    const filename = span?.getAttribute('data-text');
+    console.log("Selected Image =>", filename);
+
+    clickAt(101, 280);
+
+    setTimeout(() => {
+      const submitButton = document.getElementById('submitbutton');
+
+      if (submitButton) {
+        submitButton.addEventListener('click', function () {
+
+          setTimeout(() => {
+            window.location.replace("https://www.dreamstime.com/upload");
+          }, 3000);
+        });
+      } else {
+        console.warn('⚠️ No se encontró el botón con ID "submitbutton"');
+      }
+    }, 2000);
+    if (filename) {
+      setTimeout(() => {
+        const endpoint = `http://localhost:3000/photos/search?name=${filename}`;
+        fetch(endpoint)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(
+                `Error en la respuesta: ${response.status} ${response.statusText}`
+              );
+            }
+            return response.json(); // Si el endpoint devuelve JSON
+          })
+          .then((data) => {
+            const photo = data[0];
+            console.log("Photo => ", photo);
+
+            const titleInput = document.getElementById('title');
+            if (titleInput) {
+              titleInput.value = photo.title;
+            }
+
+            const descriptionTextarea = document.getElementById('description');
+            if (descriptionTextarea) {
+              descriptionTextarea.value = photo.description;
+            }
+
+            const keywordsInput = document.getElementById('keywords_tag');
+            if (keywordsInput) {
+              keywordsInput.focus();
+              keywordsInput.value = photo.keywords;
+              keywordsInput.dispatchEvent(new Event('input', { bubbles: true }));
+
+              setTimeout(() => {
+                const enterEvent = new KeyboardEvent('keydown', {
+                  key: 'Enter',
+                  keyCode: 13,
+                  which: 13,
+                  bubbles: true
+                });
+                keywordsInput.dispatchEvent(enterEvent);
+              }, 100);
+            }
+          });
+      }, 1000);
+    }
+  }, 2000);
+
   setTimeout(() => {
     document.addEventListener('click', (event) => {
       const item = event.target.closest('.upload-item');
       const fileNameElement = item.querySelector('.js-filenamefull');
       const fileName = fileNameElement?.getAttribute('data-text');
 
-      console.log("filename =>", fileName);
-      if (fileName) {
-        setTimeout(() => {
-          const endpoint = `http://localhost:3000/photos/search?name=${fileName}`;
-          fetch(endpoint)
-            .then((response) => {
-              if (!response.ok) {
-                throw new Error(
-                  `Error en la respuesta: ${response.status} ${response.statusText}`
-                );
-              }
-              return response.json(); // Si el endpoint devuelve JSON
-            })
-            .then((data) => {
-              const photo = data[0];
-              console.log("Photo => ", photo);
+      // console.log("filename =>", fileName);
+      // if (fileName) {
+      //   setTimeout(() => {
+      //     const endpoint = `http://localhost:3000/photos/search?name=${fileName}`;
+      //     fetch(endpoint)
+      //       .then((response) => {
+      //         if (!response.ok) {
+      //           throw new Error(
+      //             `Error en la respuesta: ${response.status} ${response.statusText}`
+      //           );
+      //         }
+      //         return response.json(); // Si el endpoint devuelve JSON
+      //       })
+      //       .then((data) => {
+      //         const photo = data[0];
+      //         console.log("Photo => ", photo);
 
-              const titleInput = document.getElementById('title');
-              if (titleInput) {
-                titleInput.value = photo.title;
-              }
+      //         const titleInput = document.getElementById('title');
+      //         if (titleInput) {
+      //           titleInput.value = photo.title;
+      //         }
 
-              const descriptionTextarea = document.getElementById('description');
-              if (descriptionTextarea) {
-                descriptionTextarea.value = photo.description;
-              }
+      //         const descriptionTextarea = document.getElementById('description');
+      //         if (descriptionTextarea) {
+      //           descriptionTextarea.value = photo.description;
+      //         }
 
-              const keywordsInput = document.getElementById('keywords_tag');
-              if (keywordsInput) {
-                keywordsInput.focus();
-                keywordsInput.value = photo.keywords;
-                keywordsInput.dispatchEvent(new Event('input', { bubbles: true }));
+      //         const keywordsInput = document.getElementById('keywords_tag');
+      //         if (keywordsInput) {
+      //           keywordsInput.focus();
+      //           keywordsInput.value = photo.keywords;
+      //           keywordsInput.dispatchEvent(new Event('input', { bubbles: true }));
 
-                setTimeout(() => {
-                  const enterEvent = new KeyboardEvent('keydown', {
-                    key: 'Enter',
-                    keyCode: 13,
-                    which: 13,
-                    bubbles: true
-                  });
-                  keywordsInput.dispatchEvent(enterEvent);
-                }, 100);
-              }
-            });
-        }, 1000);
-      }
+      //           setTimeout(() => {
+      //             const enterEvent = new KeyboardEvent('keydown', {
+      //               key: 'Enter',
+      //               keyCode: 13,
+      //               which: 13,
+      //               bubbles: true
+      //             });
+      //             keywordsInput.dispatchEvent(enterEvent);
+      //           }, 100);
+      //         }
+      //       });
+      //   }, 1000);
+      // }
     });
   }, 100);
 
@@ -675,7 +766,7 @@ function setKeywordsAlamy(keywordsImage) {
 
   const keywordsString = wordsArray.reverse().join(', ');
   console.log(keywordsString);
-  
+
 
   const keywordInput = document.querySelector('#add-keyword');
   keywordInput.value = keywordsString;
