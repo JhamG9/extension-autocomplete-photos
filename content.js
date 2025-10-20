@@ -115,7 +115,6 @@ function setValueCategoryTwo(category) {
   }, 3000);
 }
 
-
 function functionShutterstock() {
   try {
     // Seleccionamos todos los elementos con la clase especificada
@@ -168,7 +167,6 @@ function functionShutterstock() {
                     const resultString = trimmedArray.join(", "); // Reconstruye el string
                     const resultKeywords = resultString.replace(/\./g, "");
 
-
                     setTimeout(() => {
                       // Intentamos simular un clic en el contenedor <div> que contiene el <textarea>
                       const divContainer = document.querySelector(
@@ -183,7 +181,6 @@ function functionShutterstock() {
 
                           setValueCategoryOne(photoDB.categoryOne);
                           setValueCategoryTwo(photoDB.categoryTwo);
-
                         }, 1000);
                       } else {
                         console.log("No se encontró el contenedor <div>.");
@@ -350,43 +347,44 @@ function functionAdobeStock() {
 // ****************************************************************
 function setCountryGettyImages() {
   // 1. Referencia al input
-  const input = document.querySelector('#metadata-select-country_of_shoot');
+  const input = document.querySelector("#metadata-select-country_of_shoot");
 
   // 2. Hacer focus y escribir "Col"
   input.focus();
-  input.value = 'Col';
+  input.value = "Col";
 
   // 3. Disparar evento input para que Material UI detecte el cambio
-  input.dispatchEvent(new Event('input', { bubbles: true }));
+  input.dispatchEvent(new Event("input", { bubbles: true }));
 
   // 4. Esperar un momento para que el dropdown cargue las opciones
   setTimeout(() => {
     // 5. Buscar el dropdown con opciones (normalmente un <ul> con clases MuiAutocomplete-popper o similar)
-    const dropdown = document.querySelector('ul.MuiAutocomplete-listbox');
+    const dropdown = document.querySelector("ul.MuiAutocomplete-listbox");
 
     if (!dropdown) {
-      console.log('No se encontró la lista de opciones');
+      console.log("No se encontró la lista de opciones");
       return;
     }
 
     // 6. Buscar la opción que contenga "Colombia"
-    const option = Array.from(dropdown.querySelectorAll('li')).find(li =>
-      li.textContent.toLowerCase().includes('colombia')
+    const option = Array.from(dropdown.querySelectorAll("li")).find((li) =>
+      li.textContent.toLowerCase().includes("colombia")
     );
 
     if (option) {
       // 7. Hacer click para seleccionar
       option.click();
-      console.log('Colombia seleccionada');
-
+      console.log("Colombia seleccionada");
 
       setTimeout(() => {
-        const saveButton = document.querySelector('button[data-cy="save-metadata"]');
-        const sumbitButton = document.querySelector('[data-cy="submit-button"]');
+        const saveButton = document.querySelector(
+          'button[data-cy="save-metadata"]'
+        );
+        const sumbitButton = document.querySelector(
+          '[data-cy="submit-button"]'
+        );
         if (saveButton) {
-
-          saveButton.addEventListener('click', function () {
-
+          saveButton.addEventListener("click", function () {
             setTimeout(() => {
               sumbitButton.click();
             }, 1000);
@@ -396,43 +394,51 @@ function setCountryGettyImages() {
         }
       }, 100);
     } else {
-      console.log('Opción Colombia no encontrada');
+      console.log("Opción Colombia no encontrada");
     }
   }, 1500);
 }
 
 function setTitleGettyImages(title) {
-  const textarea = document.querySelector('[data-cy="md-headline"] textarea[name="headline"]');
+  const textarea = document.querySelector(
+    '[data-cy="md-headline"] textarea[name="headline"]'
+  );
   textarea.focus();
   textarea.click();
   textarea.value = title;
   // Notificamos a React que el valor cambió
-  const event = new Event('input', { bubbles: true });
+  const event = new Event("input", { bubbles: true });
   textarea.dispatchEvent(event);
 }
 
 function setDescriptionGettyImages(description) {
-  const textarea2 = document.querySelector('[data-cy="md-caption"] textarea[name="caption"]');
+  const textarea2 = document.querySelector(
+    '[data-cy="md-caption"] textarea[name="caption"]'
+  );
   textarea2.focus();
   textarea2.click();
   textarea2.value = description;
-  const event2 = new Event('input', { bubbles: true });
+  const event2 = new Event("input", { bubbles: true });
   textarea2.dispatchEvent(event2);
 }
 
 function setKeywordsGettyImages(keywords) {
-  const keywordsInput = document.querySelector('div[data-cy="metadata-keyword-multiselect"] textarea');
+  const keywordsInput = document.querySelector(
+    'div[data-cy="metadata-keyword-multiselect"] textarea'
+  );
   keywordsInput.focus();
   keywordsInput.value = keywords;
-  keywordsInput.dispatchEvent(new Event('input', { bubbles: true }));
+  keywordsInput.dispatchEvent(new Event("input", { bubbles: true }));
 }
 
 function functionGettyImages() {
   console.log("Listo");
 
-  document.querySelectorAll('[data-cy="item-card"]').forEach(card => {
-    card.addEventListener('click', () => {
-      const fileName = card.querySelector('[data-cy="contribution-file-name"]')?.textContent?.trim();
+  document.querySelectorAll('[data-cy="item-card"]').forEach((card) => {
+    card.addEventListener("click", () => {
+      const fileName = card
+        .querySelector('[data-cy="contribution-file-name"]')
+        ?.textContent?.trim();
       console.log(fileName);
 
       setTimeout(() => {
@@ -462,10 +468,6 @@ function functionGettyImages() {
 // ****************** FINISH GETTY IMAGES *************************
 // ****************************************************************
 
-
-
-
-
 // ****************************************************************
 // ********************* START DREAMSTIEM *************************
 // ****************************************************************
@@ -483,7 +485,7 @@ function clickAt(x, y) {
       bubbles: true,
       cancelable: true,
       clientX: x,
-      clientY: y
+      clientY: y,
     };
 
     element.dispatchEvent(new MouseEvent("mouseover", eventOptions));
@@ -499,19 +501,20 @@ function clickAt(x, y) {
 
 function functionDreamsTime() {
   setTimeout(() => {
-    const elementImg = clickAt(101, 430);
-    const span = elementImg.querySelector('.js-filenamefull');
-    const filename = span?.getAttribute('data-text');
+    // const elementImg = clickAt(101, 430); // Personal Screen
+    const elementImg = clickAt(74, 505); // Work Screen
+
+    const span = elementImg.querySelector(".js-filenamefull");
+    const filename = span?.getAttribute("data-text");
     console.log("Selected Image =>", filename);
 
     clickAt(101, 280);
 
     setTimeout(() => {
-      const submitButton = document.getElementById('submitbutton');
+      const submitButton = document.getElementById("submitbutton");
 
       if (submitButton) {
-        submitButton.addEventListener('click', function () {
-
+        submitButton.addEventListener("click", function () {
           setTimeout(() => {
             window.location.replace("https://www.dreamstime.com/upload");
           }, 3000);
@@ -536,28 +539,30 @@ function functionDreamsTime() {
             const photo = data[0];
             console.log("Photo => ", photo);
 
-            const titleInput = document.getElementById('title');
+            const titleInput = document.getElementById("title");
             if (titleInput) {
               titleInput.value = photo.title;
             }
 
-            const descriptionTextarea = document.getElementById('description');
+            const descriptionTextarea = document.getElementById("description");
             if (descriptionTextarea) {
               descriptionTextarea.value = photo.description;
             }
 
-            const keywordsInput = document.getElementById('keywords_tag');
+            const keywordsInput = document.getElementById("keywords_tag");
             if (keywordsInput) {
               keywordsInput.focus();
               keywordsInput.value = photo.keywords;
-              keywordsInput.dispatchEvent(new Event('input', { bubbles: true }));
+              keywordsInput.dispatchEvent(
+                new Event("input", { bubbles: true })
+              );
 
               setTimeout(() => {
-                const enterEvent = new KeyboardEvent('keydown', {
-                  key: 'Enter',
+                const enterEvent = new KeyboardEvent("keydown", {
+                  key: "Enter",
                   keyCode: 13,
                   which: 13,
-                  bubbles: true
+                  bubbles: true,
                 });
                 keywordsInput.dispatchEvent(enterEvent);
               }, 100);
@@ -565,13 +570,13 @@ function functionDreamsTime() {
           });
       }, 1000);
     }
-  }, 2000);
+  }, 4000);
 
   setTimeout(() => {
-    document.addEventListener('click', (event) => {
-      const item = event.target.closest('.upload-item');
-      const fileNameElement = item.querySelector('.js-filenamefull');
-      const fileName = fileNameElement?.getAttribute('data-text');
+    document.addEventListener("click", (event) => {
+      const item = event.target.closest(".upload-item");
+      const fileNameElement = item.querySelector(".js-filenamefull");
+      const fileName = fileNameElement?.getAttribute("data-text");
 
       // console.log("filename =>", fileName);
       // if (fileName) {
@@ -621,73 +626,70 @@ function functionDreamsTime() {
       // }
     });
   }, 100);
-
-
 }
 
 // ****************************************************************
 // ******************** FINISH DREAMSTIME *************************
 // ****************************************************************
 
-
-
 // ****************************************************************
 // ********************* START DEPOSITPHOTOS **********************
 // ****************************************************************
 
 function setKeywordsDepositPhotos(keywordsBackend, item) {
-  const keywords = keywordsBackend.split(',').map(k => k.trim());
+  const keywords = keywordsBackend.split(",").map((k) => k.trim());
   for (const word of keywords) {
-    const inputContainer = item.querySelector('._tagseditor__item.tagseditor__item_new');
-    const inputSpan = inputContainer?.querySelector('span[contenteditable="true"]');
+    const inputContainer = item.querySelector(
+      "._tagseditor__item.tagseditor__item_new"
+    );
+    const inputSpan = inputContainer?.querySelector(
+      'span[contenteditable="true"]'
+    );
 
     if (!inputSpan) break;
 
     inputSpan.focus();
 
     // Limpia el contenido por si quedó algo previo
-    inputSpan.textContent = '';
-    inputSpan.dispatchEvent(new InputEvent('input', { bubbles: true }));
+    inputSpan.textContent = "";
+    inputSpan.dispatchEvent(new InputEvent("input", { bubbles: true }));
 
     // Simula que el usuario escribe la palabra
     inputSpan.textContent = word;
-    inputSpan.dispatchEvent(new InputEvent('input', { bubbles: true }));
+    inputSpan.dispatchEvent(new InputEvent("input", { bubbles: true }));
 
     // Simula tecla Enter para confirmar el tag
-    const enterEvent = new KeyboardEvent('keydown', {
-      key: 'Enter',
-      code: 'Enter',
+    const enterEvent = new KeyboardEvent("keydown", {
+      key: "Enter",
+      code: "Enter",
       keyCode: 13,
       which: 13,
       bubbles: true,
-      cancelable: true
+      cancelable: true,
     });
     inputSpan.dispatchEvent(enterEvent);
   }
 }
 
-var lastIdDepositPhotos = '';
+var lastIdDepositPhotos = "";
 /**
  * Se debe de dar click en el input de keywords
  * y luego se selecciona y envia la foto
  */
 function functionDepositPhotos() {
-  const items = document.querySelectorAll('.itemeditor');
+  const items = document.querySelectorAll(".itemeditor");
   console.log("Elementos encontrados: ", items.length);
 
-  items.forEach(item => {
-    item.addEventListener('click', (event) => {
-
-      const id = item.getAttribute('id');
+  items.forEach((item) => {
+    item.addEventListener("click", (event) => {
+      const id = item.getAttribute("id");
       if (id === lastIdDepositPhotos) return;
       lastIdDepositPhotos = id;
 
-      const fileNameSpan = item.querySelector('.itemeditor__name');
+      const fileNameSpan = item.querySelector(".itemeditor__name");
       if (fileNameSpan) {
-
         const fileName = fileNameSpan.textContent.trim();
         console.log("Filename =>", fileName);
-
 
         const endpoint = `http://localhost:3000/photos/search?name=${fileName}`;
         fetch(endpoint)
@@ -711,14 +713,15 @@ function functionDepositPhotos() {
             //   textarea.dispatchEvent(new Event('input', { bubbles: true }));
             // }
 
-
-            const textarea = item.querySelector('textarea.itemeditor__input_description');
+            const textarea = item.querySelector(
+              "textarea.itemeditor__input_description"
+            );
             if (textarea) {
               textarea.focus();
 
               // Vaciar el valor inicial (por si acaso)
-              textarea.value = '';
-              textarea.dispatchEvent(new Event('input', { bubbles: true }));
+              textarea.value = "";
+              textarea.dispatchEvent(new Event("input", { bubbles: true }));
 
               const text = photo.description;
 
@@ -727,13 +730,15 @@ function functionDepositPhotos() {
               const typeChar = () => {
                 if (index < text.length) {
                   textarea.value += text[index];
-                  textarea.dispatchEvent(new Event('input', { bubbles: true }));
+                  textarea.dispatchEvent(new Event("input", { bubbles: true }));
 
                   index++;
                   setTimeout(typeChar, 5); // velocidad de escritura (50 ms entre caracteres)
                 } else {
                   // Opcional: lanzar un 'change' al final
-                  textarea.dispatchEvent(new Event('change', { bubbles: true }));
+                  textarea.dispatchEvent(
+                    new Event("change", { bubbles: true })
+                  );
                 }
               };
 
@@ -750,50 +755,46 @@ function functionDepositPhotos() {
 // ********************* FINISH DEPOSITPHOTOS **********************
 // ****************************************************************
 
-
-
 // ****************************************************************
 // ********************** START ALAMY *****************************
 // ****************************************************************
 function setKeywordsAlamy(keywordsImage) {
-
   const wordsArray = keywordsImage
-    .split(',')
-    .map(word => word.trim())
-    .filter(word => word.length > 0)
+    .split(",")
+    .map((word) => word.trim())
+    .filter((word) => word.length > 0)
     .slice(0, 50);
   // const keywordsString = wordsArray.join(', ');
 
-  const keywordsString = wordsArray.reverse().join(', ');
+  const keywordsString = wordsArray.reverse().join(", ");
   console.log(keywordsString);
 
-
-  const keywordInput = document.querySelector('#add-keyword');
+  const keywordInput = document.querySelector("#add-keyword");
   keywordInput.value = keywordsString;
 
-  keywordInput.dispatchEvent(new Event('input', { bubbles: true }));
+  keywordInput.dispatchEvent(new Event("input", { bubbles: true }));
 
   // Simulamos la tecla Enter para que se dispare ng-keypress="AddNewKeyword($event);"
-  const event = new KeyboardEvent('keypress', {
+  const event = new KeyboardEvent("keypress", {
     bubbles: true,
     cancelable: true,
-    key: 'Enter',
+    key: "Enter",
     keyCode: 13,
-    which: 13
+    which: 13,
   });
   keywordInput.dispatchEvent(event);
 }
 
 function assignFirstSuperTagsAlamy() {
   setTimeout(() => {
-    const tagsContainer = document.getElementById('mtKeywords');
+    const tagsContainer = document.getElementById("mtKeywords");
     if (!tagsContainer) {
-      console.warn('No se encontró la lista de tags');
+      console.warn("No se encontró la lista de tags");
       return;
     }
 
     // Selecciona todos los íconos de estrella
-    const stars = tagsContainer.querySelectorAll('i.icon-tag-star.dark-grey');
+    const stars = tagsContainer.querySelectorAll("i.icon-tag-star.dark-grey");
     let selectedCount = 0;
 
     for (let star of stars) {
@@ -814,18 +815,17 @@ function assignFirstSuperTagsAlamy() {
     //     console.warn('⚠️ No se encontró el botón de guardar con id="submitsearch".');
     //   }
     // }, 500);
-
   }, 1000);
 }
 
 function functionAlamy() {
-  document.querySelectorAll('li.grid img').forEach(img => {
-    img.addEventListener('click', function (e) {
-      const li = e.target.closest('li.grid');
+  document.querySelectorAll("li.grid img").forEach((img) => {
+    img.addEventListener("click", function (e) {
+      const li = e.target.closest("li.grid");
       if (!li) return;
 
-      const filenameSpan = li.querySelector('.img_cap');
-      console.log('Nombre del archivo:', filenameSpan);
+      const filenameSpan = li.querySelector(".img_cap");
+      console.log("Nombre del archivo:", filenameSpan);
 
       if (filenameSpan) {
         const fileName = filenameSpan.textContent.trim();
@@ -843,12 +843,16 @@ function functionAlamy() {
           .then(async (data) => {
             const image = data[0];
             setTimeout(() => {
-              const captionTextarea = document.querySelector('textarea[name="captionText"]');
+              const captionTextarea = document.querySelector(
+                'textarea[name="captionText"]'
+              );
               if (captionTextarea) {
                 captionTextarea.value = image.description;
 
-                captionTextarea.dispatchEvent(new Event('input', { bubbles: true }));
-                console.log('Texto insertado en el caption');
+                captionTextarea.dispatchEvent(
+                  new Event("input", { bubbles: true })
+                );
+                console.log("Texto insertado en el caption");
               }
               setKeywordsAlamy(image.keywords);
               assignFirstSuperTagsAlamy();
@@ -858,25 +862,22 @@ function functionAlamy() {
     });
   });
 
-  const button = document.getElementById('submitsearch');
-  const clearSelectionInput = document.querySelector('#automationClearSelection input.deselect-all');
+  const button = document.getElementById("submitsearch");
+  const clearSelectionInput = document.querySelector(
+    "#automationClearSelection input.deselect-all"
+  );
   if (button) {
-    button.addEventListener('click', () => {
+    button.addEventListener("click", () => {
       setTimeout(() => {
         clearSelectionInput.click();
       }, 500);
     });
   }
-
-
 }
 
 // ****************************************************************
 // ********************** FINISH ALAMY *****************************
 // ****************************************************************
-
-
-
 
 setTimeout(() => {
   const currentDomain = window.location.origin;
@@ -892,14 +893,17 @@ setTimeout(() => {
     }, 8000);
   } else if (currentDomain.includes("dreamstime.com")) {
     functionDreamsTime();
+    document.addEventListener("click", function (event) {
+      const x = event.clientX; // Coordenada X dentro de la ventana
+      const y = event.clientY; // Coordenada Y dentro de la ventana
+      console.log(`Coordenadas del click: X=${x}, Y=${y}`);
+    });
   } else if (currentDomain.includes("depositphotos.com")) {
     functionDepositPhotos();
   } else if (currentDomain.includes("alamy.com")) {
     setTimeout(() => {
       functionAlamy();
       console.log("Listo!");
-
     }, 20000); // Tiempo para dejar la vista de las imagenes para vender
   }
 }, 3000);
-
