@@ -376,23 +376,23 @@ function setCountryGettyImages() {
       option.click();
       console.log("Colombia seleccionada");
 
-      setTimeout(() => {
-        const saveButton = document.querySelector(
-          'button[data-cy="save-metadata"]'
-        );
-        const sumbitButton = document.querySelector(
-          '[data-cy="submit-button"]'
-        );
-        if (saveButton) {
-          saveButton.addEventListener("click", function () {
-            setTimeout(() => {
-              sumbitButton.click();
-            }, 1000);
-          });
-          // saveButton.click(); // simula el clic
-          // clearInterval(interval);
-        }
-      }, 100);
+      // setTimeout(() => {
+      //   const saveButton = document.querySelector(
+      //     'button[data-cy="save-metadata"]'
+      //   );
+      //   const sumbitButton = document.querySelector(
+      //     '[data-cy="submit-button"]'
+      //   );
+      //   if (saveButton) {
+      //     saveButton.addEventListener("click", function () {
+      //       setTimeout(() => {
+      //         sumbitButton.click();
+      //       }, 1000);
+      //     });
+      //     // saveButton.click(); // simula el clic
+      //     // clearInterval(interval);
+      //   }
+      // }, 100);
     } else {
       console.log("Opción Colombia no encontrada");
     }
@@ -557,15 +557,16 @@ function functionDreamsTime() {
                 new Event("input", { bubbles: true })
               );
 
-              setTimeout(() => {
-                const enterEvent = new KeyboardEvent("keydown", {
-                  key: "Enter",
-                  keyCode: 13,
-                  which: 13,
-                  bubbles: true,
-                });
-                keywordsInput.dispatchEvent(enterEvent);
-              }, 100);
+              keywordsInput.focus();
+              const btn = document.querySelector("#submitbutton");
+              document.addEventListener("keydown", (event) => {
+                if (event.altKey) {
+                  setTimeout(() => {
+                    btn.click();
+                  }, 1000);
+                  // Simula el click en el botón
+                }
+              });
             }
           });
       }, 1000);
@@ -890,7 +891,7 @@ setTimeout(() => {
   } else if (currentDomain.includes("gettyimages.com")) {
     setTimeout(() => {
       functionGettyImages();
-    }, 8000);
+    }, 12000);
   } else if (currentDomain.includes("dreamstime.com")) {
     functionDreamsTime();
     document.addEventListener("click", function (event) {

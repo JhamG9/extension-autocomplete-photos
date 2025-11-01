@@ -1,21 +1,54 @@
 {
   "manifest_version": 3,
-  "name": "Image Jham GPT",
-  "version": "1.0",
-  "description": "Simular clics en elementos",
+  "name": "JhamFlow Stock",
+  "version": "2.0.0",
+  "description": "Automatiza el llenado de metadatos para fotos de stock en múltiples plataformas",
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
   "action": {
-    "default_popup": "popup.html",
+    "default_popup": "popup/popup.html",
     "default_icon": {
       "16": "icono16.png",
       "48": "icono48.png",
       "128": "icono128.png"
     }
   },
-  "host_permissions": ["<all_urls>"],
+  "host_permissions": [
+    "*://submit.shutterstock.com/*",
+    "*://contributor.stock.adobe.com/*",
+    "*://*.gettyimages.com/*",
+    "*://*.dreamstime.com/*",
+    "*://*.depositphotos.com/*",
+    "*://*.alamy.com/*"
+  ],
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"]
+      "matches": [
+        "*://submit.shutterstock.com/*",
+        "*://contributor.stock.adobe.com/*",
+        "*://*.gettyimages.com/*",
+        "*://*.dreamstime.com/*",
+        "*://*.depositphotos.com/*",
+        "*://*.alamy.com/*"
+      ],
+      "js": [
+        "src/utils/logger.js",
+        "src/utils/dom-utils.js",
+        "src/utils/api-client.js",
+        "src/config/selectors.js",
+        "src/config/platforms.js",
+        "src/platforms/base-platform.js",
+        "src/platforms/shutterstock.js",
+        "src/platforms/adobe-stock.js",
+        "src/platforms/getty-images.js",
+        "src/platforms/dreamstime.js",
+        "src/platforms/depositphotos.js",
+        "src/platforms/alamy.js",
+        "src/content-main.js"
+      ],
+      "run_at": "document_end"
     }
   ]
 }
