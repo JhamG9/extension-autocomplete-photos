@@ -36,6 +36,29 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.error('Error:', error);
   }
   
+  // Configuración de Dreamstime automático
+  const dreamstimeAutoCheckbox = document.getElementById('dreamstime-auto');
+  
+  // Cargar configuración guardada
+  try {
+    const result = await chrome.storage.local.get(['dreamstimeAuto']);
+    dreamstimeAutoCheckbox.checked = result.dreamstimeAuto !== false; // Por defecto true
+  } catch (error) {
+    console.error('Error loading settings:', error);
+  }
+  
+  // Guardar cuando cambie
+  dreamstimeAutoCheckbox.addEventListener('change', async () => {
+    try {
+      await chrome.storage.local.set({ 
+        dreamstimeAuto: dreamstimeAutoCheckbox.checked 
+      });
+      console.log('Dreamstime auto setting saved:', dreamstimeAutoCheckbox.checked);
+    } catch (error) {
+      console.error('Error saving setting:', error);
+    }
+  });
+  
   // Botón de recarga
   reloadBtn.addEventListener('click', async () => {
     try {

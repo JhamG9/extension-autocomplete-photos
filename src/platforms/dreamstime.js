@@ -10,18 +10,38 @@ class DreamstimePlatform extends BasePlatform {
     Logger.log(this.config.name, 'Initializing Dreamstime platform');
     
     try {
-      // Primera función: click automático después del delay inicial
-      setTimeout(() => {
-        this.performInitialClick();
-      }, this.getDelay('initialization'));
+      // Verificar configuración de modo automático
+      const isAutoMode = await this.checkAutoMode();
+      Logger.log(this.config.name, 'Auto mode:', isAutoMode);
+      
+      if (isAutoMode) {
+        // Modo automático: click automático después del delay inicial
+        setTimeout(() => {
+          this.performInitialClick();
+        }, this.getDelay('initialization'));
+      }
 
-      // Segunda función: listener para clicks en elementos de upload
+      // Siempre agregar listeners manuales
       setTimeout(() => {
         this.attachUploadListeners();
       }, 100);
       
     } catch (error) {
       Logger.error(this.config.name, 'Failed to initialize', error);
+    }
+  }
+
+  async checkAutoMode() {
+    try {
+      // Verificar si chrome.storage está disponible
+      if (typeof chrome !== 'undefined' && chrome.storage) {
+        const result = await chrome.storage.local.get(['dreamstimeAuto']);
+        return result.dreamstimeAuto !== false; // Por defecto true
+      }
+      return true; // Fallback si no hay storage
+    } catch (error) {
+      Logger.warn(this.config.name, 'Could not check auto mode, using default', error);
+      return true; // Por defecto automático
     }
   }
 
