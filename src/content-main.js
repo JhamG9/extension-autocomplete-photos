@@ -16,31 +16,31 @@ class ExtensionManager {
 
     try {
       Logger.log('Extension', 'Starting initialization');
-      
+
       const currentDomain = window.location.origin;
       Logger.log('Extension', 'Current domain', { domain: currentDomain });
-      
+
       // Detectar plataforma y crear instancia
       this.currentPlatform = this.createPlatformInstance(currentDomain);
-      
+
       if (!this.currentPlatform) {
         Logger.warn('Extension', 'No platform handler found for domain', { domain: currentDomain });
         return;
       }
-      
+
       // Inicializar la plataforma después del delay inicial
       setTimeout(async () => {
         try {
           await this.currentPlatform.initialize();
           this.isInitialized = true;
-          Logger.success('Extension', 'Platform initialized successfully', { 
-            platform: this.currentPlatform.config.name 
+          Logger.success('Extension', 'Platform initialized successfully', {
+            platform: this.currentPlatform.config.name
           });
         } catch (error) {
           Logger.error('Extension', 'Platform initialization failed', error);
         }
       }, 3000); // Delay inicial de 3 segundos como en el código original
-      
+
     } catch (error) {
       Logger.error('Extension', 'Failed to initialize extension', error);
     }
@@ -52,20 +52,18 @@ class ExtensionManager {
       if (domain.includes('submit.shutterstock')) {
         return new ShutterstockPlatform();
       }
-      
+
       // Adobe Stock
       if (domain.includes('contributor.stock.adobe.com')) {
         return new AdobeStockPlatform();
       }
-      
+
       // Getty Images (con delay adicional)
       if (domain.includes('gettyimages.com')) {
-        setTimeout(() => {
-          return new GettyImagesPlatform();
-        }, 12000); // Delay especial para Getty como en código original
-        return null; // No retornar inmediatamente
+
+        return new GettyImagesPlatform();
       }
-      
+
       // Dreamstime
       if (domain.includes('dreamstime.com')) {
         // Agregar listener para coordenadas de click (debug)
@@ -74,22 +72,22 @@ class ExtensionManager {
           const y = event.clientY;
           Logger.log('Dreamstime', `Click coordinates: X=${x}, Y=${y}`);
         });
-        
+
         return new DreamstimePlatform();
       }
-      
+
       // DepositPhotos
       if (domain.includes('depositphotos.com')) {
         return new DepositPhotosPlatform();
       }
-      
+
       // Alamy
       if (domain.includes('alamy.com')) {
         return new AlamyPlatform();
       }
-      
+
       return null;
-      
+
     } catch (error) {
       Logger.error('Extension', 'Failed to create platform instance', { domain, error });
       return null;
@@ -115,17 +113,17 @@ class ExtensionManager {
 }
 
 // Auto-inicialización cuando el contenido se carga
-(function() {
+(function () {
   'use strict';
-  
+
   Logger.log('Extension', 'Content script loaded');
-  
+
   // Crear e inicializar el manager
   const extensionManager = new ExtensionManager();
-  
+
   // Hacer el manager globalmente accesible para debugging
   window.extensionManager = extensionManager;
-  
+
   // Inicializar cuando el DOM esté listo
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
@@ -135,6 +133,6 @@ class ExtensionManager {
     // El DOM ya está listo
     extensionManager.initialize();
   }
-  
+
   Logger.success('Extension', 'Extension manager setup complete');
 })();

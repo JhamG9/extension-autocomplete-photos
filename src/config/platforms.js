@@ -44,7 +44,7 @@ const PLATFORM_CONFIG = {
     name: 'Dreamstime',
     domain: 'dreamstime.com',
     delays: {
-      initialization: 4000,
+      initialization: 1000,
       afterClick: 1000,
       beforeSubmit: 2000
     },

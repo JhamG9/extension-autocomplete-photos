@@ -47,7 +47,7 @@ class DreamstimePlatform extends BasePlatform {
 
   performInitialClick() {
     try {
-      const coords = this.config.coordinates.workScreen; // Usando coordenadas de trabajo
+      const coords = this.config.coordinates.personalScreen; // Usando coordenadas de personal
       const elementImg = DOMUtils.clickAt(coords.x, coords.y);
       
       if (elementImg) {
@@ -163,10 +163,10 @@ class DreamstimePlatform extends BasePlatform {
       
       if (btn) {
         document.addEventListener('keydown', (event) => {
-          if (event.altKey) {
+          if (event.ctrlKey) {
             setTimeout(() => {
               btn.click();
-              Logger.log(this.config.name, 'Auto-submit via Alt key');
+              Logger.log(this.config.name, 'Auto-submit via Ctrl key');
             }, this.getDelay('afterClick'));
           }
         });
