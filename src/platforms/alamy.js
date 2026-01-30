@@ -14,6 +14,7 @@ class AlamyPlatform extends BasePlatform {
       setTimeout(() => {
         this.attachImageListeners();
         this.setupSubmitButtonListener();
+        this.setupCtrlSubmitListener();
         Logger.success(this.config.name, 'Platform ready');
       }, this.getDelay('initialization'));
       
@@ -91,10 +92,36 @@ class AlamyPlatform extends BasePlatform {
       
       // Seleccionar super tags automáticamente
       await this.assignSuperTags();
+
+      // Agregar si es editorial (si aplica)
+      if(photoData.editorial) {
+        await this.setEditorial();
+      }
+
+      // Agregar click auto cuando presione el control
+      this.setupCtrlSubmitListener();
       
     } catch (error) {
       Logger.error(this.config.name, 'Error filling fields', error);
     }
+  }
+
+  setupCtrlSubmitListener() {
+    // Evitar agregar múltiples listeners
+    if (this.ctrlListenerAttached) return;
+    
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Control') {
+        const submitButton = document.querySelector(this.selectors.submitSearch);
+        if (submitButton) {
+          submitButton.click();
+          Logger.success(this.config.name, 'Submit clicked via Ctrl key');
+        }
+      }
+    });
+    
+    this.ctrlListenerAttached = true;
+    Logger.log(this.config.name, 'Ctrl submit listener attached');
   }
 
   async setCaption(description) {
@@ -175,6 +202,23 @@ class AlamyPlatform extends BasePlatform {
       
     } catch (error) {
       Logger.error(this.config.name, 'Failed to assign super tags', error);
+    }
+  }
+
+  async setEditorial() {
+    try {
+      const checkbox = document.querySelector(this.selectors.editorialCheckbox);
+      
+      if (checkbox) {
+        if (!checkbox.checked) {
+          checkbox.click();
+        }
+        Logger.success(this.config.name, 'Editorial checkbox selected');
+      } else {
+        Logger.error(this.config.name, 'Editorial checkbox not found');
+      }
+    } catch (error) {
+      Logger.error(this.config.name, 'Failed to set editorial', error);
     }
   }
 }

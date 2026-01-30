@@ -69,6 +69,9 @@ class GettyImagesPlatform extends BasePlatform {
       // Configurar país
       await this.setCountry();
 
+      // Agregar listener para hacer submit con Ctrl
+      this.setupCtrlSubmit();
+
     } catch (error) {
       Logger.error(this.config.name, 'Error filling fields', error);
     }
@@ -165,6 +168,35 @@ class GettyImagesPlatform extends BasePlatform {
       }
     } catch (error) {
       Logger.error(this.config.name, 'Failed to set country', error);
+    }
+  }
+
+  setupCtrlSubmit() {
+    // Evitar agregar múltiples listeners
+    if (this.ctrlListenerAdded) return;
+    
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Control') {
+        this.clickSaveButton();
+      }
+    });
+    
+    this.ctrlListenerAdded = true;
+    Logger.log(this.config.name, 'Ctrl submit listener added');
+  }
+
+  clickSaveButton() {
+    try {
+      const saveButton = document.querySelector('button[data-cy="save-metadata"]');
+      
+      if (saveButton) {
+        saveButton.click();
+        Logger.success(this.config.name, 'Save metadata button clicked');
+      } else {
+        Logger.error(this.config.name, 'Save metadata button not found');
+      }
+    } catch (error) {
+      Logger.error(this.config.name, 'Failed to click save button', error);
     }
   }
 }

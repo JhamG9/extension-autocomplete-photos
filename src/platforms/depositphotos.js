@@ -60,6 +60,11 @@ class DepositPhotosPlatform extends BasePlatform {
       
       // Llenar keywords
       await this.setKeywords(item, photoData.keywords);
+
+      // Seleccionar editorial si aplica
+      if (photoData.editorial) {
+        await this.setEditorial(item);
+      }
       
     } catch (error) {
       Logger.error(this.config.name, 'Failed to fill fields', error);
@@ -132,6 +137,23 @@ class DepositPhotosPlatform extends BasePlatform {
       
     } catch (error) {
       Logger.error(this.config.name, 'Failed to add keyword', { word, error });
+    }
+  }
+
+  async setEditorial(item) {
+    try {
+      const editorialSelect = item.querySelector('select._itemeditor__value_is_editorial');
+      
+      if (editorialSelect) {
+        editorialSelect.value = 'yes';
+        editorialSelect.dispatchEvent(new Event('change', { bubbles: true }));
+        
+        Logger.success(this.config.name, 'Editorial set to Yes');
+      } else {
+        Logger.error(this.config.name, 'Editorial select not found');
+      }
+    } catch (error) {
+      Logger.error(this.config.name, 'Failed to set editorial', error);
     }
   }
 }

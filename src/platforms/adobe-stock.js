@@ -87,9 +87,28 @@ class AdobeStockPlatform extends BasePlatform {
       
       // Llenar keywords
       await this.setKeywords(photoData.keywords);
-      
+      await this.clickReleaseOption(false);
     } catch (error) {
       Logger.error(this.config.name, 'Error filling fields', error);
+    }
+  }
+
+  async clickReleaseOption(isEditorial) {
+    try {
+      // Si es editorial, seleccionar "Sí", si no es editorial, seleccionar "No"
+      const selector = isEditorial ? 'input[data-t="has-release-yes"]' : 'input[data-t="has-release-no"]';
+      const optionText = isEditorial ? 'Sí' : 'No';
+      
+      const releaseInput = document.querySelector(selector);
+      
+      if (releaseInput) {
+        releaseInput.click();
+        Logger.success(this.config.name, `Clicked "${optionText}" release option`);
+      } else {
+        Logger.error(this.config.name, `"${optionText}" release option not found`);
+      }
+    } catch (error) {
+      Logger.error(this.config.name, 'Failed to click release option', error);
     }
   }
 

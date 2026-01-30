@@ -81,9 +81,13 @@ class ShutterstockPlatform extends BasePlatform {
       
       // Llenar keywords
       await this.setKeywords(photoData.keywords);
-      
+    
+      // Seleccionar tipo editorial si corresponde
+      await this.setUsageType(photoData.editorial);
+
       // Llenar categorías
       await this.setCategories(photoData);
+
       
     } catch (error) {
       Logger.error(this.config.name, 'Error filling fields', error);
@@ -197,6 +201,26 @@ class ShutterstockPlatform extends BasePlatform {
       }
     } catch (error) {
       Logger.error(this.config.name, 'Failed to set category 2', error);
+    }
+  }
+
+  async setUsageType(isEditorial) {
+    try {
+      if (!isEditorial) {
+        Logger.log(this.config.name, 'Usage type: Commercial (default)');
+        return;
+      }
+
+      const editorialButton = document.querySelector('button[data-testid="button-editorial"]');
+      
+      if (editorialButton) {
+        editorialButton.click();
+        Logger.success(this.config.name, 'Usage type set to Editorial');
+      } else {
+        Logger.error(this.config.name, 'Editorial button not found');
+      }
+    } catch (error) {
+      Logger.error(this.config.name, 'Failed to set usage type', error);
     }
   }
 }

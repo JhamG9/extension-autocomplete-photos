@@ -8,12 +8,12 @@ class DreamstimePlatform extends BasePlatform {
 
   async initialize() {
     Logger.log(this.config.name, 'Initializing Dreamstime platform');
-    
+
     try {
       // Verificar configuración de modo automático
       const isAutoMode = await this.checkAutoMode();
       Logger.log(this.config.name, 'Auto mode:', isAutoMode);
-      
+
       if (isAutoMode) {
         // Modo automático: click automático después del delay inicial
         setTimeout(() => {
@@ -25,7 +25,7 @@ class DreamstimePlatform extends BasePlatform {
       setTimeout(() => {
         this.attachUploadListeners();
       }, 100);
-      
+
     } catch (error) {
       Logger.error(this.config.name, 'Failed to initialize', error);
     }
@@ -49,20 +49,20 @@ class DreamstimePlatform extends BasePlatform {
     try {
       const coords = this.config.coordinates.personalScreen; // Usando coordenadas de personal
       const elementImg = DOMUtils.clickAt(coords.x, coords.y);
-      
+
       if (elementImg) {
         const span = elementImg.querySelector(this.selectors.fileNameFull);
         const filename = span?.getAttribute('data-text');
         Logger.log(this.config.name, 'Selected image', { filename });
-        
+
         // Click en otra posición
         DOMUtils.clickAt(101, 280);
-        
+
         // Configurar listener del botón submit
         setTimeout(() => {
           this.setupSubmitButton();
         }, this.getDelay('beforeSubmit'));
-        
+
         // Procesar archivo si se encontró
         if (filename) {
           setTimeout(() => {
@@ -78,14 +78,14 @@ class DreamstimePlatform extends BasePlatform {
   setupSubmitButton() {
     try {
       const submitButton = document.getElementById(this.selectors.submitButton.replace('#', ''));
-      
+
       if (submitButton) {
         submitButton.addEventListener('click', () => {
           setTimeout(() => {
             window.location.replace('https://www.dreamstime.com/upload');
           }, 3000);
         });
-        
+
         Logger.log(this.config.name, 'Submit button listener attached');
       }
     } catch (error) {
@@ -100,10 +100,12 @@ class DreamstimePlatform extends BasePlatform {
         if (item) {
           const fileNameElement = item.querySelector(this.selectors.fileNameFull);
           const fileName = fileNameElement?.getAttribute('data-text');
-          
+
           if (fileName) {
             Logger.log(this.config.name, 'Upload item clicked', { fileName });
-            // Funcionalidad comentada en el código original
+
+            // Procesar archivo con delay de 3 segundos
+            this.processFile(fileName);
           }
         }
       });
@@ -114,14 +116,26 @@ class DreamstimePlatform extends BasePlatform {
 
   async processFile(filename) {
     try {
+      Logger.log(this.config.name, 'Waiting 3 seconds before fetching data...');
+
+      // Esperar 3 segundos antes de hacer la petición al endpoint
+      await this.delay(3000);
+
       const photoData = await this.getPhotoData(filename);
-      
+
       // Llenar campos
       await this.fillFields(photoData);
-      
+
+      // Seleccionar editorial si aplica
+      if (photoData.editorial) {
+        setTimeout(async () => {
+          await this.setEditorial();
+        }, 1000);
+      }
+
       // Configurar hotkey Alt para submit
       this.setupHotkey();
-      
+
     } catch (error) {
       Logger.error(this.config.name, 'Failed to process file', error);
     }
@@ -135,14 +149,14 @@ class DreamstimePlatform extends BasePlatform {
         titleInput.value = photoData.title;
         Logger.success(this.config.name, 'Title set');
       }
-      
+
       // Descripción
       const descriptionTextarea = document.querySelector(this.selectors.description);
       if (descriptionTextarea) {
         descriptionTextarea.value = photoData.description;
         Logger.success(this.config.name, 'Description set');
       }
-      
+
       // Keywords
       const keywordsInput = document.querySelector(this.selectors.keywords);
       if (keywordsInput) {
@@ -151,7 +165,7 @@ class DreamstimePlatform extends BasePlatform {
         keywordsInput.dispatchEvent(new Event('input', { bubbles: true }));
         Logger.success(this.config.name, 'Keywords set');
       }
-      
+
     } catch (error) {
       Logger.error(this.config.name, 'Failed to fill fields', error);
     }
@@ -160,7 +174,7 @@ class DreamstimePlatform extends BasePlatform {
   setupHotkey() {
     try {
       const btn = document.querySelector(this.selectors.submitButton);
-      
+
       if (btn) {
         document.addEventListener('keydown', (event) => {
           if (event.ctrlKey) {
@@ -173,6 +187,31 @@ class DreamstimePlatform extends BasePlatform {
       }
     } catch (error) {
       Logger.error(this.config.name, 'Failed to setup hotkey', error);
+    }
+  }
+
+  async setEditorial() {
+    try {
+      console.log('Seleccionando editorial');
+
+      const licenseContainer = document.getElementById('licensesubmissiontype');
+
+      if (licenseContainer) {
+        const editorialLink = Array.from(licenseContainer.querySelectorAll('a')).find(
+          (a) => a.textContent.includes('Editorial (ED)')
+        );
+
+        if (editorialLink) {
+          editorialLink.click();
+          Logger.success(this.config.name, 'Editorial license selected');
+        } else {
+          Logger.error(this.config.name, 'Editorial link not found');
+        }
+      } else {
+        Logger.error(this.config.name, 'License container not found');
+      }
+    } catch (error) {
+      Logger.error(this.config.name, 'Failed to set editorial', error);
     }
   }
 }

@@ -60,7 +60,8 @@ const SELECTORS = {
     keywordsContainer: '#mtKeywords',
     superTagStars: 'i.icon-tag-star.dark-grey',
     submitSearch: '#submitsearch',
-    clearSelection: '#automationClearSelection input.deselect-all'
+    clearSelection: '#automationClearSelection input.deselect-all',
+    editorialCheckbox: '#automationMyUploadEditorial input[type="checkbox"]'
   }
 };
 
