@@ -12,7 +12,8 @@ const SELECTORS = {
     categoryTwo: '[aria-labelledby="category2"]',
     categoryTwoInput: 'input[name="category2"]',
     clickableItems: '.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation0.MuiCard-root.css-1enqk8l',
-    fileName: '.MuiTypography-root.MuiTypography-bodyStaticLg.css-w8rlye'
+    fileName: '.MuiTypography-root.MuiTypography-bodyStaticLg.css-w8rlye',
+    submitButton: 'button[data-testid="edit-dialog-submit-button"]'
   },
   
   ADOBE_STOCK: {

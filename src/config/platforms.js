@@ -8,7 +8,7 @@ const PLATFORM_CONFIG = {
     delays: {
       afterClick: 1000,
       beforeKeywords: 500,
-      categoryDelay: 3000
+      categoryDelay: 1000
     },
     limits: {
       maxKeywords: 50

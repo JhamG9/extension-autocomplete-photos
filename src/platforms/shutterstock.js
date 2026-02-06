@@ -88,10 +88,33 @@ class ShutterstockPlatform extends BasePlatform {
       // Llenar categorías
       await this.setCategories(photoData);
 
+      // Agregar click en boton submit cuando presione la tecla ctrl
+      this.setupCtrlSubmitListener();
       
     } catch (error) {
       Logger.error(this.config.name, 'Error filling fields', error);
     }
+  }
+
+  setupCtrlSubmitListener() {
+    // Evitar agregar múltiples listeners
+    if (this.ctrlListenerAttached) return;
+    
+    document.addEventListener('keyup', (event) => {
+      if (event.key === 'Control') {
+        const submitButton = document.querySelector(this.selectors.submitButton);
+        if (submitButton) {
+          // Simular eventos de mouse completos para React/MUI
+          submitButton.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
+          submitButton.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true }));
+          submitButton.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+          Logger.success(this.config.name, 'Submit clicked via Ctrl key');
+        }
+      }
+    });
+    
+    this.ctrlListenerAttached = true;
+    Logger.log(this.config.name, 'Ctrl submit listener attached');
   }
 
   async setDescription(description) {
