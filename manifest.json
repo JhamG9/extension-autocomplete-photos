@@ -21,7 +21,8 @@
     "*://*.gettyimages.com/*",
     "*://*.dreamstime.com/*",
     "*://*.depositphotos.com/*",
-    "*://*.alamy.com/*"
+    "*://*.alamy.com/*",
+    "*://*.pond5.com/*"
   ],
   "content_scripts": [
     {
@@ -31,7 +32,8 @@
         "*://*.gettyimages.com/*",
         "*://*.dreamstime.com/*",
         "*://*.depositphotos.com/*",
-        "*://*.alamy.com/*"
+        "*://*.alamy.com/*",
+        "*://*.pond5.com/*"
       ],
       "js": [
         "src/utils/logger.js",
@@ -46,6 +48,7 @@
         "src/platforms/dreamstime.js",
         "src/platforms/depositphotos.js",
         "src/platforms/alamy.js",
+        "src/platforms/pond5.js",
         "src/content-main.js"
       ],
       "run_at": "document_end"

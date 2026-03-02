@@ -76,6 +76,18 @@ const PLATFORM_CONFIG = {
       maxKeywords: 50,
       maxSuperTags: 10
     }
+  },
+
+  POND5: {
+    name: 'Pond5',
+    domain: 'pond5.com',
+    delays: {
+      afterClick: 800,
+      initialization: 2000
+    },
+    limits: {
+      maxKeywords: 50
+    }
   }
 };
 

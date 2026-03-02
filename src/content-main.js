@@ -86,6 +86,11 @@ class ExtensionManager {
         return new AlamyPlatform();
       }
 
+      // Pond5
+      if (domain.includes('pond5.com')) {
+        return new Pond5Platform();
+      }
+
       return null;
 
     } catch (error) {

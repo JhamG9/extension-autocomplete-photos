@@ -63,6 +63,14 @@ const SELECTORS = {
     submitSearch: '#submitsearch',
     clearSelection: '#automationClearSelection input.deselect-all',
     editorialCheckbox: '#automationMyUploadEditorial input[type="checkbox"]'
+  },
+
+  POND5: {
+    videoContainer: '.p5bb_root',
+    fileNameLink: 'a[href*="/stock-footage/item/"]',
+    title: 'input[name="name"]',
+    description: 'textarea#description',
+    keywords: 'textarea#normal_textarea_box'
   }
 };
 
