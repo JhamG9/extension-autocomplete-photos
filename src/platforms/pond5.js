@@ -57,7 +57,10 @@ class Pond5Platform extends BasePlatform {
 			// Buscar el enlace con el nombre del archivo
 			const link = container.querySelector(this.selectors.fileNameLink);
 			const text = link?.textContent?.trim();
-			return text || null;
+			
+			// Reemplazar espacios por guiones bajos
+			const fileName = text ? text.replace(/\s+/g, '_') : null;
+			return fileName;
 		} catch (error) {
 			Logger.error(this.config.name, 'Failed to extract filename', error);
 			return null;
