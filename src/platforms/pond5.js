@@ -78,6 +78,9 @@ class Pond5Platform extends BasePlatform {
 			// Llenar keywords
 			await this.setKeywords(photoData.keywords);
 
+			// Seleccionar país Colombia
+			await this.setLocationCountry();
+
 			Logger.success(this.config.name, 'All fields filled');
 		} catch (error) {
 			Logger.error(this.config.name, 'Error filling fields', error);
@@ -138,6 +141,79 @@ class Pond5Platform extends BasePlatform {
 			}
 		} catch (error) {
 			Logger.error(this.config.name, 'Failed to set keywords', error);
+		}
+	}
+
+	async setLocationCountry() {
+		try {
+			// Usar jQuery y Chosen API si está disponible
+			if (typeof jQuery !== 'undefined') {
+				const $select = jQuery('#location_country');
+				if ($select.length) {
+					$select.val('COL').trigger('chosen:updated');
+					Logger.success(this.config.name, 'Location country set via jQuery');
+					return;
+				}
+			}
+
+			// Fallback: Usar el campo de búsqueda del Chosen
+			const chosenSingle = document.querySelector('#location_country_chosen .chosen-single');
+			
+			if (chosenSingle) {
+				// Abrir el dropdown
+				chosenSingle.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
+				
+				await this.delay(300);
+				
+				// Escribir en el campo de búsqueda para filtrar
+				const searchInput = document.querySelector('#location_country_chosen .chosen-search input');
+				
+				if (searchInput) {
+					searchInput.focus();
+					searchInput.value = 'Colombia';
+					searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+					
+					// Simular keyup para que Chosen filtre
+					searchInput.dispatchEvent(new KeyboardEvent('keyup', { 
+						bubbles: true, 
+						key: 'a', 
+						keyCode: 65 
+					}));
+					
+					await this.delay(300);
+					
+					// Buscar el resultado filtrado (Colombia debería ser el único visible)
+					const allResults = document.querySelectorAll('#location_country_chosen .chosen-results li.active-result');
+					
+					for (const li of allResults) {
+						// Verificar que el elemento esté visible y sea Colombia
+						const isVisible = li.offsetParent !== null && !li.classList.contains('result-selected');
+						if (li.textContent.trim() === 'Colombia' && isVisible) {
+							// Hacer click directo con eventos completos
+							li.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true }));
+							li.click();
+							
+							Logger.success(this.config.name, 'Location country set to Colombia');
+							return;
+						}
+					}
+					
+					// Último intento: buscar cualquier li visible con Colombia
+					const visibleColombia = document.querySelector('#location_country_chosen .chosen-results li:not([style*="display: none"])');
+					if (visibleColombia && visibleColombia.textContent.trim() === 'Colombia') {
+						visibleColombia.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true }));
+						visibleColombia.click();
+						Logger.success(this.config.name, 'Location country set to Colombia (fallback)');
+						return;
+					}
+				}
+				
+				Logger.warn(this.config.name, 'Could not set location country');
+			} else {
+				Logger.error(this.config.name, 'Chosen single element not found');
+			}
+		} catch (error) {
+			Logger.error(this.config.name, 'Failed to set location country', error);
 		}
 	}
 }

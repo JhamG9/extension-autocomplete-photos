@@ -70,7 +70,10 @@ const SELECTORS = {
     fileNameLink: 'a[href*="/stock-footage/item/"]',
     title: 'input[name="name"]',
     description: 'textarea#description',
-    keywords: 'textarea#normal_textarea_box'
+    keywords: 'textarea#normal_textarea_box',
+    locationCountry: 'select#location_country',
+    locationCountryChosen: '#location_country_chosen',
+    locationCountryResults: '#location_country_chosen .chosen-results li'
   }
 };
 
