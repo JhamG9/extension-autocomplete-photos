@@ -81,6 +81,9 @@ class Pond5Platform extends BasePlatform {
 			// Seleccionar país Colombia
 			await this.setLocationCountry();
 
+			// Configurar Ctrl para submit
+			this.setupCtrlSubmitListener();
+
 			Logger.success(this.config.name, 'All fields filled');
 		} catch (error) {
 			Logger.error(this.config.name, 'Error filling fields', error);
@@ -215,6 +218,27 @@ class Pond5Platform extends BasePlatform {
 		} catch (error) {
 			Logger.error(this.config.name, 'Failed to set location country', error);
 		}
+	}
+
+	setupCtrlSubmitListener() {
+		// Evitar agregar múltiples listeners
+		if (this.ctrlListenerAttached) return;
+
+		document.addEventListener('keydown', (event) => {
+			if (event.key === 'Control') {
+				const submitButton = document.querySelector('button[onclick*="submitForm"]');
+				
+				if (submitButton) {
+					submitButton.click();
+					Logger.success(this.config.name, 'Submit clicked via Ctrl key');
+				} else {
+					Logger.warn(this.config.name, 'Submit button not found');
+				}
+			}
+		});
+
+		this.ctrlListenerAttached = true;
+		Logger.log(this.config.name, 'Ctrl submit listener attached');
 	}
 }
 
