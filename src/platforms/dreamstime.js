@@ -50,13 +50,16 @@ class DreamstimePlatform extends BasePlatform {
       const coords = this.config.coordinates.personalScreen; // Usando coordenadas de personal
       const elementImg = DOMUtils.clickAt(coords.x, coords.y);
 
+
       if (elementImg) {
         const span = elementImg.querySelector(this.selectors.fileNameFull);
         const filename = span?.getAttribute('data-text');
         Logger.log(this.config.name, 'Selected image', { filename });
 
-        // Click en otra posición
-        DOMUtils.clickAt(101, 280);
+        console.log('Elemento img encontrado, filename:', elementImg);
+        
+        // Click en otra posición para Mac
+        DOMUtils.clickAt(234, 318);
 
         // Configurar listener del botón submit
         setTimeout(() => {

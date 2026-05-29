@@ -63,6 +63,7 @@ class DepositPhotosPlatform extends BasePlatform {
 
       // Seleccionar editorial si aplica
       if (photoData.editorial) {
+        console.log('DATA PHOTO:', photoData);
         await this.setEditorial(item);
       }
       
@@ -143,7 +144,7 @@ class DepositPhotosPlatform extends BasePlatform {
   async setEditorial(item) {
     try {
       const editorialSelect = item.querySelector('select._itemeditor__value_is_editorial');
-      
+      console.log('Editorial select element:', editorialSelect);        
       if (editorialSelect) {
         editorialSelect.value = 'yes';
         editorialSelect.dispatchEvent(new Event('change', { bubbles: true }));
