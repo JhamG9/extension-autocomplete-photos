@@ -63,7 +63,8 @@ async function renderConfigSummary() {
   summary.className = `config-summary${missing ? ' warn' : ''}`;
   summary.innerHTML = [
     `<b>Tipo:</b> ${config.editorial ? 'Editorial' : 'Comercial'}`,
-    config.editorial ? `<b>Lugar:</b> ${escapeHtml(config.place || '— falta —')} · <b>Fecha:</b> ${escapeHtml(config.date || '— falta —')}` : '',
+    config.place || config.editorial ? `<b>Lugar:</b> ${escapeHtml(config.place || '— falta —')}` : '',
+    config.editorial ? `<b>Fecha:</b> ${escapeHtml(config.date || '— falta —')}` : '',
     `<b>Keywords base:</b> ${escapeHtml(config.keywords || '—')}`,
     config.notes ? `<b>Notas:</b> ${escapeHtml(config.notes)}` : '',
     '<span>Se cambia desde el popup de la extensión.</span>'
