@@ -88,11 +88,6 @@ class AdobeStockPlatform extends BasePlatform {
       // Llenar keywords
       await this.setKeywords(photoData.keywords);
       await this.clickReleaseOption(false);
-
-      if (photoData.isIA) {
-        await this.checkGenerativeAI();
-      }
-      console.log('PhotoData====', photoData);
     } catch (error) {
       Logger.error(this.config.name, 'Error filling fields', error);
     }
@@ -154,33 +149,4 @@ class AdobeStockPlatform extends BasePlatform {
       Logger.error(this.config.name, 'Failed to set keywords', error);
     }
   }
-
-  async checkGenerativeAI() {
-    try {
-      const aiCheckbox = document.querySelector('#content-tagger-generative-ai-checkbox');
-
-      if (aiCheckbox && !aiCheckbox.checked) {
-        aiCheckbox.click();
-        Logger.success(this.config.name, 'Generative AI checkbox checked');
-      } else if (!aiCheckbox) {
-        Logger.error(this.config.name, 'Generative AI checkbox not found');
-        return;
-      }
-
-      await this.delay(1000);
-
-      const propertyReleaseCheckbox = document.querySelector('#content-tagger-generative-ai-property-release-checkbox');
-
-      if (propertyReleaseCheckbox && !propertyReleaseCheckbox.checked) {
-        propertyReleaseCheckbox.click();
-        Logger.success(this.config.name, 'Generative AI property release checkbox checked');
-      } else if (!propertyReleaseCheckbox) {
-        Logger.error(this.config.name, 'Generative AI property release checkbox not found');
-      }
-    } catch (error) {
-      Logger.error(this.config.name, 'Failed to check generative AI checkboxes', error);
-    }
-  }
 }
-
-window.AdobeStockPlatform = AdobeStockPlatform;

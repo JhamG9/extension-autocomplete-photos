@@ -28,7 +28,7 @@ class BasePlatform {
    */
   async getPhotoData(fileName) {
     try {
-      const photoData = await this.apiClient.searchPhoto(fileName);
+      const photoData = await this.apiClient.searchPhoto(fileName, this.platformKey);
       
       // Procesar keywords según los límites de la plataforma
       const processedKeywords = this.apiClient.processKeywords(

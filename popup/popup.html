@@ -8,40 +8,80 @@
 <body>
   <div class="container">
     <h2>Jham Stock Autocomplete</h2>
-    
+
     <div class="status">
-      <span id="status-indicator" class="status-dot active"></span>
-      <span id="status-text">Activo</span>
+      <span id="status-indicator" class="status-dot"></span>
+      <span id="status-text">Verificando…</span>
     </div>
-    
-    <div class="info">
-      <p>Extensión funcionando en:</p>
-      <ul>
-        <li>✅ Shutterstock</li>
-        <li>✅ Adobe Stock</li>
-        <li>✅ Getty Images</li>
-        <li>✅ Dreamstime</li>
-        <li>✅ DepositPhotos</li>
-        <li>✅ Alamy</li>
-      </ul>
+    <div class="status backend">
+      <span id="backend-indicator" class="status-dot"></span>
+      <span id="backend-text">Conectando con el backend…</span>
     </div>
-    
+
     <div class="settings">
-      <h3>Configuración</h3>
-      <div class="setting-item">
+      <div class="settings-header">
+        <h3>Configuración de generación</h3>
+        <span id="saved-text" class="saved"></span>
+      </div>
+      <p class="hint">Se usa solo para fotos que aún no se han generado. Se guarda sola.</p>
+
+      <div class="field">
+        <label for="keywords">Keywords base</label>
+        <textarea id="keywords" rows="3" placeholder="bogota, las moyas, colombia, paramo"></textarea>
+        <small id="keywords-count"></small>
+      </div>
+
+      <div class="field checkbox">
+        <label>
+          <input type="checkbox" id="editorial">
+          <span>Editorial</span>
+        </label>
+      </div>
+
+      <div id="editorial-fields" class="editorial-fields" hidden>
+        <div class="field">
+          <label for="place">Lugar</label>
+          <input type="text" id="place" placeholder="Las Moyas Trail, Bogotá, Colombia">
+        </div>
+        <div class="field">
+          <label for="date">Fecha</label>
+          <input type="date" id="date">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="notes">Notas para la IA <span class="optional">(opcional)</span></label>
+        <textarea id="notes" rows="2" placeholder="El barrio tiene forma de mariposa desde el aire"></textarea>
+      </div>
+
+      <p id="config-warning" class="warning" hidden></p>
+    </div>
+
+    <details class="platforms">
+      <summary>Plataformas y opciones</summary>
+      <ul>
+        <li>Shutterstock</li>
+        <li>Adobe Stock</li>
+        <li>Getty Images</li>
+        <li>Dreamstime</li>
+        <li>DepositPhotos</li>
+        <li>Alamy</li>
+        <li>Pond5</li>
+      </ul>
+      <div class="field checkbox">
         <label>
           <input type="checkbox" id="dreamstime-auto" checked>
           <span>Dreamstime automático</span>
         </label>
         <small>Click automático en coordenadas después de 4 segundos</small>
       </div>
-    </div>
-    
+    </details>
+
     <div class="actions">
-      <button id="reload-btn">Recargar Extensión</button>
+      <button id="reload-btn">Recargar página</button>
     </div>
   </div>
-  
+
   <script src="popup.js"></script>
 </body>
 </html>
