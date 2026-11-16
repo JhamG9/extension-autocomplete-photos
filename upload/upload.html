@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Subir fotos · Jham Stock</title>
+  <link rel="stylesheet" href="upload.css">
+</head>
+<body>
+  <main class="page">
+    <header class="page-header">
+      <div>
+        <h1>Subir fotos</h1>
+        <p class="subtitle">Los archivos se guardan en <code>/public</code> del backend. Usa el sufijo <code>_lugar</code> en el nombre para identificarlos.</p>
+      </div>
+      <div class="backend" id="backend">
+        <span class="dot" id="backend-dot"></span>
+        <span id="backend-text">Conectando…</span>
+      </div>
+    </header>
+
+    <label class="dropzone" id="dropzone" for="file-input">
+      <input type="file" id="file-input" multiple accept=".jpg,.jpeg,.png,.webp,.mp4">
+      <svg class="dropzone-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 16V4m0 0-4 4m4-4 4 4M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <strong>Arrastra fotos o videos aquí</strong>
+      <span>o haz clic para elegirlos · JPG, PNG, WEBP, MP4</span>
+    </label>
+
+    <section class="options">
+      <label class="toggle">
+        <input type="checkbox" id="generate">
+        <span>Generar título y keywords al subir</span>
+      </label>
+      <div class="config-summary" id="config-summary" hidden></div>
+    </section>
+
+    <section class="queue" id="queue-section" hidden>
+      <div class="queue-header">
+        <h2>Archivos</h2>
+        <span id="queue-stats"></span>
+      </div>
+      <ul id="queue"></ul>
+      <button type="button" id="clear-btn" class="secondary">Limpiar lista</button>
+    </section>
+  </main>
+
+  <script src="upload.js"></script>
+</body>
+</html>

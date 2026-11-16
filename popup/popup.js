@@ -128,6 +128,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   checkBackend();
   await initConfigForm();
 
+  $('upload-btn').addEventListener('click', () => {
+    chrome.tabs.create({ url: chrome.runtime.getURL('upload/upload.html') });
+    window.close();
+  });
+
   $('reload-btn').addEventListener('click', async () => {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     if (tab) {

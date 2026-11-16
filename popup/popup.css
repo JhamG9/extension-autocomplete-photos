@@ -191,7 +191,22 @@ h2 {
 }
 
 .actions {
-  text-align: center;
+  display: flex;
+  gap: 8px;
+}
+
+.actions button {
+  flex: 1;
+}
+
+button.secondary {
+  background: white;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+button.secondary:hover {
+  background: #f3f4f6;
 }
 
 button {
